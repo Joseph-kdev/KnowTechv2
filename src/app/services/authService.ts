@@ -5,13 +5,11 @@ import {
   authState,
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
-  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   User,
 } from '@angular/fire/auth';
-import { Router } from '@angular/router';
 import { from } from 'rxjs';
 
 @Service()

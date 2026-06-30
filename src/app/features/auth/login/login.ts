@@ -3,6 +3,7 @@ import { Component, signal, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/authService';
 import { Router } from '@angular/router';
+import { catchError, finalize, switchMap } from 'rxjs';
 
 export interface FeedItem {
   id: number;
@@ -212,26 +213,35 @@ export class Login implements OnInit, OnDestroy {
     this.showPassword.update((v) => !v);
   }
 
-  async onLogin() {
+  onLogin() {
     this.isLoading.set(true);
-    try {
-      await this.authService.login(this.email(), this.password());
+    this.authService.login(this.email(), this.password())
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false)
+        })
+      ).subscribe({
+        next: () => {
 
-      this.router.navigate([''], { replaceUrl: true });
-    } catch (error) {
-      console.error(error);
-      return;
-    }
+          this.router.navigate([""], { replaceUrl: true})
+        },
+        error: (error) => {
+          console.log("Auth error", error)
+        }
+      })
   }
 
-  async googleSignIn() {
-    try {
-      await this.authService.loginWithGoogle();
+  googleSignIn() {
+    this.authService.loginWithGoogle()
+       .subscribe({
+        next: () => {
 
-      this.router.navigate([''], { replaceUrl: true });
-    } catch (error) {
-      console.error(error);
-    }
+          this.router.navigate([""], { replaceUrl: true})
+        },
+        error: (error) => {
+          console.log("Auth error", error)
+        }
+      })
   }
 
   trackById(_: number, item: FeedItem) {
