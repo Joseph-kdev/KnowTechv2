@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; }
+
+/* ── Feed card stream animations ── */
+
+@keyframes streamIn {
+  0%   { opacity: 0; transform: translateY(-28px) scale(0.97); }
+  60%  { opacity: 1; transform: translateY(4px) scale(1.005); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.4); opacity: 0.6; }
+}
+
+@keyframes floatBubble {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+.feed-card {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.feed-card.entering {
+  animation: streamIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Age-based opacity: nth-child fades older cards */
+.feed-list .feed-card:nth-child(1) { opacity: 1; }
+.feed-list .feed-card:nth-child(2) { opacity: 0.82; }
+.feed-list .feed-card:nth-child(3) { opacity: 0.58; }
+.feed-list .feed-card:nth-child(4) { opacity: 0.34; }
+
+.float-bubble { animation: floatBubble 4.5s ease-in-out infinite; }
+.float-bubble-delay { animation: floatBubble 5s ease-in-out 1.2s infinite; }
+.float-bubble-slow { animation: floatBubble 6s ease-in-out 2.4s infinite; }
+
+.fade-in-1 { animation: fadeSlideIn 0.5s ease-out 0.1s both; }
+.fade-in-2 { animation: fadeSlideIn 0.5s ease-out 0.25s both; }
+.fade-in-3 { animation: fadeSlideIn 0.5s ease-out 0.4s both; }
+.fade-in-4 { animation: fadeSlideIn 0.5s ease-out 0.55s both; }
+.fade-in-5 { animation: fadeSlideIn 0.5s ease-out 0.7s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .feed-card, .feed-card.entering,
+  .float-bubble, .float-bubble-delay, .float-bubble-slow,
+  .fade-in-1, .fade-in-2, .fade-in-3, .fade-in-4, .fade-in-5 {
+    animation: none !important;
+    opacity: 1 !important;
+  }
+}

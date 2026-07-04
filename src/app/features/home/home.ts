@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { Feeds } from '../../services/feeds';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 interface Article {
   badge: string;
@@ -14,7 +16,7 @@ interface FeedSuggestion {
   selector: 'app-home',
   templateUrl: './home.html',
 })
-export class Home {
+export class Home implements OnInit{
   readonly newsfeedArticles: Article[] = Array(4).fill({
     badge: 'WSJ world',
     headline: 'Sanofi Probed by EU Over Flu Vaccine Marketing',
@@ -33,4 +35,15 @@ export class Home {
     { name: 'The Verge' },
     { name: 'Reuters' },
   ];
+
+  feedService = inject(Feeds)
+
+  ngOnInit(): void {
+      this.feedService.checkServerHealth()
+        .subscribe({
+          next: response => {
+            console.log(response);
+          }
+        })
+  }
 }

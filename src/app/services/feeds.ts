@@ -4,10 +4,15 @@ import { Observable } from 'rxjs';
 
 @Service()
 export class Feeds {
-  private readonly serverUrl = "https://knowtech-go.vercel.app/api/"
+  private readonly serverUrl = "http://localhost:8000/api/"
   readonly http = inject(HttpClient)
 
-  getFeedsSubscribedTo(): Observable<FeedGroup[]> {
-    return this.http.get<FeedGroup[]>(`${this.serverUrl}/posts`)
+  checkServerHealth() {
+    return this.http.get(`${this.serverUrl}health`)
   }
+
+  getFeedsSubscribedTo(): Observable<FeedGroup[]> {
+    return this.http.get<FeedGroup[]>(`${this.serverUrl}posts`)
+  }
+
 }

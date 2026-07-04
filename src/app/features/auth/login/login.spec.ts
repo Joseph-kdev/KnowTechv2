@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { Login } from './login';
 
@@ -8,7 +9,7 @@ describe('Login', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Login],
+      imports: [Login, RouterTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(Login);
@@ -18,5 +19,12 @@ describe('Login', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should link to the register page', () => {
+    const link = fixture.nativeElement.querySelector('a[routerLink="/register"]');
+
+    expect(link).toBeTruthy();
+    expect(link.getAttribute('href')).toContain('/register');
   });
 });

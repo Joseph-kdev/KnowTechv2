@@ -2,8 +2,9 @@ import { Component, signal, OnInit, OnDestroy, inject } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../services/authService';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { catchError, finalize, switchMap } from 'rxjs';
+import { Users } from '../../../services/users';
 
 export interface FeedItem {
   id: number;
@@ -147,7 +148,7 @@ const INTERVAL_MS = 2400;
 @Component({
   selector: 'login',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './login.html',
 })
 export class Login implements OnInit, OnDestroy {
@@ -213,35 +214,36 @@ export class Login implements OnInit, OnDestroy {
     this.showPassword.update((v) => !v);
   }
 
+  private readonly newUser = inject(Users)
   onLogin() {
     this.isLoading.set(true);
-    this.authService.login(this.email(), this.password())
+    this.authService
+      .login(this.email(), this.password())
       .pipe(
         finalize(() => {
-          this.isLoading.set(false)
-        })
-      ).subscribe({
+          this.isLoading.set(false);
+        }),
+      )
+      .subscribe({
         next: () => {
-
-          this.router.navigate([""], { replaceUrl: true})
+          this.router.navigate([''], { replaceUrl: true });
         },
         error: (error) => {
-          console.log("Auth error", error)
-        }
-      })
+          console.log('Auth error', error);
+        },
+      });
   }
 
   googleSignIn() {
-    this.authService.loginWithGoogle()
-       .subscribe({
-        next: () => {
-
-          this.router.navigate([""], { replaceUrl: true})
-        },
-        error: (error) => {
-          console.log("Auth error", error)
-        }
-      })
+    this.authService.loginWithGoogle().subscribe({
+      next: () => {
+        this.newUser.createUser().subscribe();
+        this.router.navigate([''], { replaceUrl: true });
+      },
+      error: (error) => {
+        console.log('Google login error', error);
+      },
+    });
   }
 
   trackById(_: number, item: FeedItem) {
