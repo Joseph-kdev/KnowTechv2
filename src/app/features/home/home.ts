@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Feeds } from '../../services/feeds';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../services/authService';
 
 interface Article {
   badge: string;
@@ -37,6 +37,7 @@ export class Home implements OnInit{
   ];
 
   feedService = inject(Feeds)
+  auth = inject(AuthService)
 
   ngOnInit(): void {
       this.feedService.checkServerHealth()

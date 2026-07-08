@@ -301,8 +301,11 @@ export class Register {
   googleSignIn() {
     this.auth.loginWithGoogle().subscribe({
       next: () => {
-        this.newUser.createUser().subscribe();
-        this.router.navigate([''], { replaceUrl: true });
+        this.newUser.createUser().subscribe({
+          next: response => {
+            this.router.navigate([''], { replaceUrl: true });
+          }
+        });
       },
       error: (error) => {
         console.log('google register error', error);

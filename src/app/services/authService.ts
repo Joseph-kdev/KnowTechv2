@@ -16,6 +16,8 @@ import { from } from 'rxjs';
 export class AuthService {
   private readonly auth = inject(Auth);
 
+  readonly user$ = authState(this.auth);
+
   readonly _user = toSignal(authState(this.auth), {
     initialValue: null,
   });

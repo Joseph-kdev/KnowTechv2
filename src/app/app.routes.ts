@@ -3,31 +3,38 @@ import { AuthLayout } from './layouts/auth-layout/auth-layout';
 import { AppLayout } from './layouts/app-layout/app-layout';
 import { inject } from '@angular/core';
 import { AuthService } from './services/authService';
+import { map, take } from 'rxjs';
 
-const AuthGuard: CanActivateFn = (): boolean | UrlTree => {
+const AuthGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  const isAuthenticated = auth.isAuthenticated();
+  return auth.user$.pipe(
+    take(1),
+    map((user) => {
+      if (user) {
+        return true;
+      }
 
-  if (isAuthenticated) {
-    return true;
-  }
-
-  return router.createUrlTree(['login']);
+      return router.createUrlTree(['login']);
+    })
+  );
 };
 
-const PublicAuthGuard: CanActivateFn = (): boolean | UrlTree => {
+const PublicAuthGuard: CanActivateFn = () => {
   const auth = inject(AuthService);
   const router = inject(Router);
 
-  const isAuthenticated = auth.isAuthenticated();
+  return auth.user$.pipe(
+    take(1),
+    map((user) => {
+      if (user) {
+        return router.createUrlTree(['']);
+      }
 
-  if (isAuthenticated) {
-    return router.createUrlTree(['']);
-  }
-
-  return true;
+      return true;
+    })
+  );
 };
 
 export const routes: Routes = [

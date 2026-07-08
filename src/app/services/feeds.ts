@@ -15,4 +15,21 @@ export class Feeds {
     return this.http.get<FeedGroup[]>(`${this.serverUrl}posts`)
   }
 
+  getAllFeeds(): Observable<Feed[]> {
+    return this.http.get<Feed[]>(`${this.serverUrl}feeds`)
+  }
+
+  followAFeed(user_id: string, feed_id: string) {
+    return this.http.post(`${this.serverUrl}follow_feeds`, {
+      user_id,
+      feed_id,
+    })
+  }
+
+  unfollowAFeed(user_id: string, feed_id: string) {
+    return this.http.post(`${this.serverUrl}unfollow_feeds`, {
+      user_id,
+      feed_id
+    })
+  }
 }
