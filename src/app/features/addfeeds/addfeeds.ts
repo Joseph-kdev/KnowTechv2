@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Feeds } from '../../services/feeds';
 import { AuthService } from '../../services/authService';
 import { finalize } from 'rxjs';
+import { Feed } from '../../types';
 
 @Component({
   selector: 'app-addfeeds',

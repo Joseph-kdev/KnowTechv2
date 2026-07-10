@@ -1,18 +1,21 @@
-interface FeedGroup {
+export interface FeedGroup {
 	FeedID:string;
 	FeedName:string;
 	FeedUrl:string;
-	Posts:RSSItem[];
+	Posts:Post[];
 }
 
-type RSSItem = {
+export interface Post {
+  id: string;
   title: string;
-  description: string;
   url: string;
-  pubDate: string;
+  description: string;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
 }
 
-type Feed = {
+export interface Feed {
   id:string;
 	name:string;
 	url:string;

@@ -50,7 +50,7 @@ export const routes: Routes = [
 
       {
         path: 'posts',
-        loadComponent: () => import('./features/home/home').then((m) => m.Home),
+        loadComponent: () => import('./features/posts/posts').then((m) => m.Posts),
       },
       {
         path: 'bookmarks',
