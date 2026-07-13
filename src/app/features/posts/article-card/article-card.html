@@ -1,0 +1,94 @@
+<article
+  class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+  (click)="selectArticle()"
+>
+  @if (article.imageUrl) {
+    <div class="relative h-36 bg-gray-100">
+      <img
+        [src]="article.imageUrl"
+        [alt]="article.headline"
+        class="w-full h-full object-cover"
+        loading="lazy"
+        (error)="article.imageUrl = null"
+      />
+      <span
+        class="absolute top-2 left-2 bg-white text-xs font-medium text-gray-700 px-2 py-0.5 rounded-full shadow-sm"
+      >
+        {{ article.badge }}
+      </span>
+    </div>
+    <div class="p-3">
+      <h3 class="text-sm font-bold text-gray-900 leading-tight mb-3 line-clamp-3">
+        @if (searchQuery.length > 0) {
+          <span [innerHTML]="highlightText(article.headline, searchQuery)"></span>
+        } @else {
+          {{ article.headline }}
+        }
+      </h3>
+      <div class="flex items-center justify-between text-xs text-gray-400">
+        <span>{{ article.timestamp }}</span>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 12.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            />
+          </svg>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="p-4 flex flex-col gap-3 min-h-55">
+      <h3 class="text-sm font-bold text-gray-900 leading-tight line-clamp-3">
+        @if (searchQuery.length > 0) {
+          <span [innerHTML]="highlightText(article.headline, searchQuery)"></span>
+        } @else {
+          {{ article.headline }}
+        }
+      </h3>
+      <span>
+        <p class="shadow-sm text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full inline-flex">
+          {{ article.badge }}
+        </p>
+      </span>
+
+      @if (getDisplayDescription()) {
+        <p class="text-sm text-gray-600 leading-6 line-clamp-3">
+          {{ getDisplayDescription() }}
+        </p>
+      }
+
+      <div class="mt-auto flex items-center justify-between text-xs text-gray-400">
+        <span>{{ article.timestamp }}</span>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 12.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+            />
+          </svg>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  }
+</article>

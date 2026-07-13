@@ -1,8 +1,9 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../services/authService';
 import { PostService } from '../../services/postService';
-import { finalize, timestamp } from 'rxjs';
+import { finalize } from 'rxjs';
 import { FormsModule } from '@angular/forms';
+import { ArticleCardComponent, type DisplayArticle } from './article-card/article-card';
 
 interface Feed {
   feed_id: string;
@@ -27,18 +28,10 @@ interface DisplayFeed {
   totalPosts: number; // count of posts
 }
 
-interface DisplayArticle {
-  id: string;
-  badge: string; // feed name
-  headline: string; // post title
-  timestamp: string; // formatted published_at
-  url: string;
-  imageUrl: string | null;
-}
-
 @Component({
   selector: 'app-posts',
-  imports: [FormsModule],
+  standalone: true,
+  imports: [FormsModule, ArticleCardComponent],
   templateUrl: './posts.html',
   styleUrl: './posts.css',
 })
@@ -90,16 +83,20 @@ export class Posts implements OnInit {
       totalPosts: feed.posts.length,
     }));
     this.allFeeds.set(displayFeeds);
-    const allPosts: DisplayArticle[] = feeds.flatMap((feed) =>
-      feed.posts.map((post) => ({
-        id: post.id,
-        badge: feed.feed_name,
-        headline: post.title,
-        timestamp: this.formatTimestamp(post.published_at),
-        url: post.url,
-        imageUrl: this.extractFirstImg(post.description),
-      })),
-    );
+    const allPosts: DisplayArticle[] = feeds
+      .flatMap((feed) =>
+        feed.posts.map((post) => ({
+          id: post.id,
+          badge: feed.feed_name,
+          headline: post.title,
+          timestamp: this.formatTimestamp(post.published_at),
+          url: post.url,
+          imageUrl: this.extractFirstImg(post.description),
+          description: post.description,
+          publishedAt: post.published_at,
+        })),
+      )
+      .sort((a, b) => this.getPostTimestampValue(b.publishedAt) - this.getPostTimestampValue(a.publishedAt));
 
     this.allPosts.set(allPosts);
 
@@ -148,6 +145,13 @@ export class Posts implements OnInit {
     return date.toLocaleDateString();
   }
 
+  private getPostTimestampValue(dateString?: string): number {
+    if (!dateString) return 0;
+
+    const parsed = Date.parse(dateString);
+    return Number.isNaN(parsed) ? 0 : parsed;
+  }
+
   applyFilters(): void {
     let posts = this.allPosts();
 
@@ -157,14 +161,18 @@ export class Posts implements OnInit {
       if (selectedFeed) {
         const feed = this.groupedPosts().find((f) => f.feed_id === selectedFeed.id);
         if (feed) {
-          const displayArticles = feed.posts.map((post) => ({
-            id: post.id,
-            badge: feed.feed_name,
-            headline: post.title,
-            timestamp: this.formatTimestamp(post.published_at),
-            url: post.url,
-            imageUrl: this.extractFirstImg(post.description),
-          }));
+          const displayArticles = feed.posts
+            .map((post) => ({
+              id: post.id,
+              badge: feed.feed_name,
+              headline: post.title,
+              timestamp: this.formatTimestamp(post.published_at),
+              url: post.url,
+              imageUrl: this.extractFirstImg(post.description),
+              description: post.description,
+              publishedAt: post.published_at,
+            }))
+            .sort((a, b) => this.getPostTimestampValue(b.publishedAt) - this.getPostTimestampValue(a.publishedAt));
           posts = displayArticles;
         }
       }
