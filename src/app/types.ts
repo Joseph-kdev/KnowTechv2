@@ -1,8 +1,8 @@
 export interface FeedGroup {
-	FeedID:string;
-	FeedName:string;
-	FeedUrl:string;
-	Posts:Post[];
+	feed_id:string;
+	feed_name:string;
+	feed_url:string;
+	posts:Post[];
 }
 
 export interface Post {

@@ -189,7 +189,9 @@
               <app-article-card
                 [article]="article"
                 [searchQuery]="searchQuery()"
+                [isBookmarked]="isArticleBookmarked(article.url)"
                 (articleSelected)="openArticle($event)"
+                (bookmarkToggled)="onBookmarkToggle($event)"
               ></app-article-card>
             }
           </div>

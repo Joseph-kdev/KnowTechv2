@@ -20,6 +20,7 @@ export class Addfeeds implements OnInit {
   readonly searchQuery = signal<string>('');
   readonly isLoading = signal<boolean>(false);
   readonly isError = signal<string | null>(null);
+  uid = this.authService._user()?.uid;
 
   // Filter feeds based on search query (case-insensitive search on name, category, or URL)
   readonly filteredFeeds = computed(() => {
@@ -30,7 +31,7 @@ export class Addfeeds implements OnInit {
       (f) =>
         f.name?.toLowerCase().includes(query) ||
         f.category?.toLowerCase().includes(query) ||
-        f.url?.toLowerCase().includes(query)
+        f.url?.toLowerCase().includes(query),
     );
   });
 
@@ -48,7 +49,6 @@ export class Addfeeds implements OnInit {
       .pipe(finalize(() => this.isLoading.set(false)))
       .subscribe({
         next: (feeds) => {
-          console.log(feeds);
           this.feedsAvailable.set(feeds);
         },
         error: (err) => {
@@ -59,9 +59,9 @@ export class Addfeeds implements OnInit {
 
   loadFollowedFeeds() {
     // Cross-reference user's followed feeds by fetching subscriptions
-    this.feedsService.getFeedsSubscribedTo().subscribe({
+    this.feedsService.getFeedsSubscribedTo(this.uid as string).subscribe({
       next: (subscribedGroups) => {
-        const ids = new Set(subscribedGroups.map((group) => group.FeedID));
+        const ids = new Set(subscribedGroups.map((group) => group.id));
         this.followedFeedIds.set(ids);
         localStorage.setItem('followed_feed_ids', JSON.stringify([...ids]));
       },
@@ -82,7 +82,9 @@ export class Addfeeds implements OnInit {
   toggleFollow(feed: Feed) {
     const uid = this.authService._user()?.uid;
     if (!uid) {
-      console.warn('User UID is not available from Firebase Auth. Defaulting to local preview toggle.');
+      console.warn(
+        'User UID is not available from Firebase Auth. Defaulting to local preview toggle.',
+      );
       this.toggleLocalFollow(feed.id);
       return;
     }
@@ -91,6 +93,7 @@ export class Addfeeds implements OnInit {
     if (isFollowing) {
       // Optimistic update
       this.removeFollowId(feed.id);
+      this.updateFeedFollowercount(feed.id, -1)
       this.feedsService.unfollowAFeed(uid, feed.id).subscribe({
         error: (err) => {
           console.error('Failed to unfollow feed on server, reverting state', err);
@@ -100,6 +103,7 @@ export class Addfeeds implements OnInit {
     } else {
       // Optimistic update
       this.addFollowId(feed.id);
+      this.updateFeedFollowercount(feed.id, +1)
       this.feedsService.followAFeed(uid, feed.id).subscribe({
         error: (err) => {
           console.error('Failed to follow feed on server, reverting state', err);
@@ -107,6 +111,16 @@ export class Addfeeds implements OnInit {
         },
       });
     }
+  }
+
+  private updateFeedFollowercount(feedId: string, delta: number) {
+    const currentFeeds = this.feedsAvailable()
+    const updatedFeeds = currentFeeds.map(f => 
+      f.id === feedId
+        ? { ...f, feed_followers_count: (f.feed_followers_count ?? 0) + delta}
+        : f
+    )
+    this.feedsAvailable.set(updatedFeeds)
   }
 
   private toggleLocalFollow(id: string) {
@@ -136,16 +150,31 @@ export class Addfeeds implements OnInit {
 
   getCategoryClass(category: string | undefined | null): string {
     const cat = (category ?? 'general').toLowerCase();
-    if (cat.includes('tech') || cat.includes('science') || cat.includes('dev') || cat.includes('code')) {
+    if (
+      cat.includes('tech') ||
+      cat.includes('science') ||
+      cat.includes('dev') ||
+      cat.includes('code')
+    ) {
       return 'bg-blue-50 text-blue-700 border border-blue-100/80';
     }
-    if (cat.includes('news') || cat.includes('world') || cat.includes('global') || cat.includes('politics')) {
+    if (
+      cat.includes('news') ||
+      cat.includes('world') ||
+      cat.includes('global') ||
+      cat.includes('politics')
+    ) {
       return 'bg-emerald-50 text-emerald-700 border border-emerald-100/80';
     }
     if (cat.includes('business') || cat.includes('finance') || cat.includes('money')) {
       return 'bg-amber-50 text-amber-700 border border-amber-100/80';
     }
-    if (cat.includes('design') || cat.includes('art') || cat.includes('culture') || cat.includes('lifestyle')) {
+    if (
+      cat.includes('design') ||
+      cat.includes('art') ||
+      cat.includes('culture') ||
+      cat.includes('lifestyle')
+    ) {
       return 'bg-pink-50 text-pink-700 border border-pink-100/80';
     }
     return 'bg-gray-50 text-gray-700 border border-gray-100';
@@ -153,19 +182,33 @@ export class Addfeeds implements OnInit {
 
   getCategoryGradient(category: string | undefined | null): string {
     const cat = (category ?? 'general').toLowerCase();
-    if (cat.includes('tech') || cat.includes('science') || cat.includes('dev') || cat.includes('code')) {
+    if (
+      cat.includes('tech') ||
+      cat.includes('science') ||
+      cat.includes('dev') ||
+      cat.includes('code')
+    ) {
       return 'from-blue-500 to-indigo-600';
     }
-    if (cat.includes('news') || cat.includes('world') || cat.includes('global') || cat.includes('politics')) {
+    if (
+      cat.includes('news') ||
+      cat.includes('world') ||
+      cat.includes('global') ||
+      cat.includes('politics')
+    ) {
       return 'from-emerald-500 to-teal-600';
     }
     if (cat.includes('business') || cat.includes('finance') || cat.includes('money')) {
       return 'from-amber-500 to-orange-600';
     }
-    if (cat.includes('design') || cat.includes('art') || cat.includes('culture') || cat.includes('lifestyle')) {
+    if (
+      cat.includes('design') ||
+      cat.includes('art') ||
+      cat.includes('culture') ||
+      cat.includes('lifestyle')
+    ) {
       return 'from-pink-500 to-rose-600';
     }
     return 'from-gray-500 to-slate-600';
   }
 }
-

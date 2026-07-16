@@ -47,7 +47,6 @@ export class AuthService {
     if (!user) {
       return null;
     }
-
     return user.getIdToken();
   }
 }

@@ -9,6 +9,7 @@ export interface DisplayArticle {
   imageUrl: string | null;
   description?: string;
   publishedAt?: string;
+  feedId?: string;
 }
 
 @Component({
@@ -19,7 +20,9 @@ export interface DisplayArticle {
 export class ArticleCardComponent {
   @Input() article!: DisplayArticle;
   @Input() searchQuery = '';
+  @Input() isBookmarked = false;
   @Output() articleSelected = new EventEmitter<string>();
+  @Output() bookmarkToggled = new EventEmitter<string>();
 
   selectArticle(): void {
     if (this.article?.url) {
@@ -27,8 +30,13 @@ export class ArticleCardComponent {
     }
   }
 
+  toggleBookmark(event: MouseEvent): void {
+    event.stopPropagation();
+    this.bookmarkToggled.emit(this.article.id);
+  }
+
   getDisplayDescription(): string {
-    const raw = this.article?.description?.trim() ?? '';
+    const raw = this.article?.description?.trim() ?? '' as string;
     if (!raw) {
       return '';
     }
