@@ -9,7 +9,9 @@
             <div class="text-gray-500">Loading posts...</div>
           </div>
         } @else if (allPosts().length === 0) {
-          <div class="flex h-64 rounded-xl border border-dashed border-gray-300 bg-white p-6 justify-center items-center text-gray-500">
+          <div
+            class="flex h-64 rounded-xl border border-dashed border-background-300 bg-background-50 p-6 justify-center items-center text-gray-500"
+          >
             No posts were found
           </div>
         } @else {
@@ -55,22 +57,45 @@
     <!-- Right Sidebar -->
     <aside class="hidden lg:block">
       <div class="bg-white border border-gray-200 rounded-lg p-5">
-        <h2 class="text-sm font-semibold text-gray-800 uppercase tracking-wide mb-4">
+        <h2 class="text-sm text-gray-600 tracking-wide mb-4">
           Recommended feeds
         </h2>
-        <div class="space-y-1">
-          @for (feed of recommendedFeeds; track feed.name) {
-            <div class="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-gray-50">
-              <div class="flex items-center gap-3">
-                <div
-                  class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-500"
-                ></div>
-                <span class="text-sm font-medium text-gray-800">{{ feed.name }}</span>
+        @if (isLoadingRecommendations()) {
+          <div class="py-4 text-center text-sm text-gray-500">Loading feeds...</div>
+        } @else if (recommendedFeeds().length === 0) {
+          <div
+            class="rounded-lg border border-dashed border-gray-200 px-3 py-4 text-center text-sm text-gray-500"
+          >
+            No new feeds to recommend.
+          </div>
+        } @else {
+          <div class="space-y-1">
+            @for (feed of recommendedFeeds(); track feed.id) {
+              <div
+                class="flex items-center justify-between py-2.5 px-3 rounded-lg hover:bg-gray-50"
+              >
+                <div class="flex items-center gap-3">
+                  <span class="text-xs text-gray-500 pr-2">{{ feed.name }}</span>
+                </div>
+                <button
+                  class="flex items-center p-1 rounded-md gap-0.5 text-xs font-medium bg-accent-600 hover:bg-accent-700 text-on-accent hover:text-gray-100"
+                  [disabled]="followingFeedIds().has(feed.id)"
+                  (click)="followRecommendedFeed(feed)"
+                >
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
+                      d="M12 4v16m8-8H4"
+                    />
+                  </svg>
+                  {{ followingFeedIds().has(feed.id) ? 'Following...' : 'Follow' }}
+                </button>
               </div>
-              <button class="text-xs font-medium text-blue-600 hover:text-blue-800">Follow</button>
-            </div>
-          }
-        </div>
+            }
+          </div>
+        }
       </div>
     </aside>
   </div>

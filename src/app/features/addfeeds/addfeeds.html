@@ -1,48 +1,46 @@
-<main class="flex-1 overflow-y-auto p-4 bg-gray-50/50 relative">
+<main class="flex-1 overflow-y-auto bg-background-50 relative">
   <!-- Header & Search Box Section -->
-  <div class="w-full mb-8 sm:mb-10 gap-5 flex flex-col">
+  <div class="w-full mb-4 sm:mb-10 gap-5 flex flex-col sticky top-0 backdrop-blur-xl z-40 p-4">
     <!-- Search input -->
-    <div class="sticky top-0 backdrop-blur-sm">
-      <div class="relative w-full">
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="relative w-full">
+      <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+          />
+        </svg>
+      </div>
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        placeholder="Search by name, category, or url..."
+        class="w-full pl-10 pr-10 py-2.5 bg-background-300 border border-background-500 rounded-2xl text-background-500 placeholder-background-500 focus:outline-none focus:ring-4 focus:ring-secondary-500/10 focus:border-secondary-500 transition-all duration-200 shadow-sm"
+      />
+      @if (searchQuery()) {
+        <button
+          (click)="searchQuery.set('')"
+          class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-background-400 hover:text-background-600 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </div>
-        <input
-          type="text"
-          [(ngModel)]="searchQuery"
-          placeholder="Search by name, category, or url..."
-          class="w-full pl-10 pr-10 py-2.5 bg-white border border-gray-200 rounded-2xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all duration-200 shadow-sm"
-        />
-        @if (searchQuery()) {
-          <button
-            (click)="searchQuery.set('')"
-            class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-          >
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        }
-      </div>
+        </button>
+      }
     </div>
   </div>
 
-  <div class="">
+  <div class="px-4">
     <!-- Loading State -->
     @if (isLoading()) {
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         @for (skeleton of [1, 2, 3, 4, 5, 6]; track $index) {
           <div
             class="animate-pulse bg-white border border-gray-100 rounded-2xl p-6 flex flex-col justify-between h-52 shadow-sm"
@@ -66,7 +64,7 @@
 
     <!-- Error State -->
     @if (isError()) {
-      <div class="w-full bg-red-50 border border-red-100 rounded-2xl p-6 text-center shadow-sm">
+      <div class="w-full border border-dashed border-background-300 bg-background-50 rounded-2xl p-6 text-center shadow-sm">
         <div class="inline-flex p-3 rounded-full bg-red-100/50 text-red-600 mb-4">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
@@ -96,7 +94,7 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
           @for (f of filteredFeeds(); track f.id) {
             <div
-              class="group bg-white border border-gray-200/80 rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:shadow-md hover:border-gray-300/60 hover:-translate-y-1 flex flex-col justify-between h-52 relative overflow-hidden"
+              class="group bg-background-100 border border-background-200/80 rounded-2xl p-5 sm:p-6 transition-all duration-300 hover:shadow-md hover:border-background-300/60 hover:-translate-y-1 flex flex-col justify-between h-52 relative overflow-hidden shadow-sm"
             >
               <div>
                 <!-- Top Badge & Decorator -->
@@ -104,12 +102,12 @@
                   <div>
                     <!-- Feed Details -->
                     <h3
-                      class="text-base sm:text-lg font-bold text-gray-900 leading-snug group-hover:text-blue-600 transition-colors line-clamp-1"
+                      class="text-base sm:text-lg font-bold text-background-900 leading-snug group-hover:text-primary-600 transition-colors line-clamp-1"
                     >
                       {{ f.name }}
                     </h3>
                     <p
-                      class="text-xs text-gray-400 font-mono mt-1 hover:text-gray-600 truncate select-all"
+                      class="text-xs text-background-400 font-mono mt-1 hover:text-gray-600 truncate select-all"
                     >
                       {{ f.url }}
                     </p>
@@ -125,10 +123,10 @@
               </div>
 
               <!-- Bottom CTA Bar -->
-              <div class="flex items-center justify-between border-t border-gray-50 pt-4 mt-4">
+              <div class="flex items-center justify-between pt-4 mt-4">
                 <!-- Followers count -->
                 <div
-                  class="flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-100/50"
+                  class="flex items-center gap-1.5 text-xs font-semibold text-gray-500 bg-gray-50 px-2.5 py-1 rounded-lg"
                 >
                   <svg
                     class="w-3.5 h-3.5 text-gray-400"
@@ -150,7 +148,7 @@
                 @if (followedFeedIds().has(f.id)) {
                   <button
                     (click)="toggleFollow(f)"
-                    class="px-4 py-2 border border-blue-200 text-blue-600 bg-blue-50/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 font-semibold rounded-xl text-xs transition-all duration-200 flex items-center justify-center gap-1.5 w-28 group/btn"
+                    class="px-4 py-2 border border-accent-400 text-accent-500 bg-background-50/20 hover:bg-gray-100 hover:text-gray-500 hover:border-gray-200 font-semibold rounded-xl text-xs transition-all duration-200 flex items-center justify-center gap-1.5 w-28 group/btn"
                   >
                     <!-- Default state (Following) -->
                     <span class="group-hover/btn:hidden flex items-center gap-1">
@@ -190,7 +188,7 @@
                 } @else {
                   <button
                     (click)="toggleFollow(f)"
-                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition-all duration-200 flex items-center justify-center gap-1.5 w-28 shadow-sm hover:shadow shadow-blue-500/10"
+                    class="px-4 py-2 bg-accent-600 hover:bg-accent-700 text-on-accent hover:text-gray-100 font-semibold rounded-xl text-xs transition-all duration-200 flex items-center justify-center gap-1.5 w-28 shadow-sm"
                   >
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path

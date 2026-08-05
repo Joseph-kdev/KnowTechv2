@@ -1,6 +1,5 @@
 <article
-  class="relative bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow cursor-pointer h-64"
-  (click)="selectArticle()"
+  class="relative bg-background-100 rounded-lg shadow-sm overflow-hidden hover:shadow-lg hover:-translate-y-1 hover:bg-background-200 transition-all h-64"
 >
   @if (article.imageUrl) {
     <div class="relative h-32 bg-gray-100">
@@ -30,9 +29,10 @@
         <div class="flex items-center gap-2">
           <button
             type="button"
-            class="z-10 inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/95 text-gray-600 border border-gray-200 shadow-sm hover:bg-gray-100"
+            class="z-10 inline-flex items-center justify-center w-9 h-9 rounded-full text-accent-600 border border-accent-300"
             [attr.aria-label]="isBookmarked ? 'Remove bookmark' : 'Add bookmark'"
             (click)="toggleBookmark($event)"
+            [class]="(isBookmarked ? '' : '')"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -40,8 +40,8 @@
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              [attr.fill]="isBookmarked ? 'yellow' : 'none'"
-              class="size-4"
+              [attr.fill]="isBookmarked ? 'currentColor' : 'none'"
+              [class]="'size-4 ' + (isBookmarked ? 'text-accent-400 hover:fill-background-200' : 'hover:fill-accent-600')"
             >
               <path
                 stroke-linecap="round"
@@ -55,7 +55,10 @@
     </div>
   } @else {
     <div class="p-4 flex flex-col gap-3 h-64">
-      <h3 class="text-sm font-bold text-gray-900 leading-tight line-clamp-3">
+      <h3
+        class="text-sm font-bold text-background-900 leading-tight line-clamp-3 hover:text-primary-500 hover:underline cursor-pointer"
+        (click)="selectArticle()"
+      >
         @if (searchQuery.length > 0) {
           <span [innerHTML]="highlightText(article.headline, searchQuery)"></span>
         } @else {
@@ -63,13 +66,15 @@
         }
       </h3>
       <span>
-        <p class="shadow-sm text-gray-700 text-xs font-medium px-2 py-0.5 rounded-full inline-flex">
+        <p
+          class="shadow-inner text-background-500 text-xs font-medium px-2 py-0.5 rounded-full inline-flex"
+        >
           {{ article.badge }}
         </p>
       </span>
 
       @if (getDisplayDescription()) {
-        <p class="text-sm text-gray-600 leading-6 line-clamp-3">
+        <p class="text-sm text-background-600 leading-relaxed line-clamp-3">
           {{ getDisplayDescription() }}
         </p>
       }
@@ -79,9 +84,10 @@
         <div class="flex items-center gap-2">
           <button
             type="button"
-            class="z-10 inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/95 text-gray-600 border border-gray-200 shadow-sm hover:bg-gray-100"
+            class="z-10 inline-flex items-center justify-center w-9 h-9 rounded-full text-accent-600 border border-accent-300"
             [attr.aria-label]="isBookmarked ? 'Remove bookmark' : 'Add bookmark'"
             (click)="toggleBookmark($event)"
+            [class]="(isBookmarked ? '' : '')"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -89,8 +95,8 @@
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              [attr.fill]="isBookmarked ? 'yellow' : 'none'"
-              class="size-4"
+              [attr.fill]="isBookmarked ? 'currentColor' : 'none'"
+              [class]="'size-4 ' + (isBookmarked ? 'text-accent-400 hover:fill-background-200' : 'hover:fill-accent-600')"
             >
               <path
                 stroke-linecap="round"

@@ -1,0 +1,14 @@
+:host {
+  display: flex;
+  flex: 1 1 0%;
+  min-width: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+/* Custom styles for Profile page */
+.bg-red-650 {
+  background-color: #e11d48; /* rose-600 */
+}
+.bg-red-650:hover {
+  background-color: #be123c; /* rose-700 */
+}

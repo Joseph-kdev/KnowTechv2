@@ -4,14 +4,10 @@ import { AuthService } from '../../services/authService';
 import { PostService } from '../../services/postService';
 import { BookmarkService } from '../../services/bookmark-service';
 import { ArticleCardComponent, DisplayArticle } from '../posts/article-card/article-card';
-import { finalize } from 'rxjs';
+import { finalize, forkJoin } from 'rxjs';
 import { extractFirstImg, formatTimestamp, getPostTimestampValue } from '../../utils/utils';
 import { CommonModule } from '@angular/common';
-import { FeedGroup } from '../../types';
-
-interface FeedSuggestion {
-  name: string;
-}
+import { Feed, FeedGroup } from '../../types';
 
 @Component({
   selector: 'app-home',
@@ -27,13 +23,9 @@ export class Home implements OnInit {
   readonly isLoading = signal(false);
   readonly isError = signal(false);
   readonly allPosts = signal<DisplayArticle[]>([]);
-
-  readonly recommendedFeeds: FeedSuggestion[] = [
-    { name: 'Ars Artica' },
-    { name: 'TechCrunch' },
-    { name: 'The Verge' },
-    { name: 'Reuters' },
-  ];
+  readonly recommendedFeeds = signal<Feed[]>([]);
+  readonly isLoadingRecommendations = signal(false);
+  readonly followingFeedIds = signal<Set<string>>(new Set());
 
   feedService = inject(Feeds);
   bookmarkService = inject(BookmarkService);
@@ -54,6 +46,7 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     this.loadPosts();
+    this.loadRecommendedFeeds();
   }
 
   loadPosts() {
@@ -93,6 +86,56 @@ export class Home implements OnInit {
       .sort((a, b) => getPostTimestampValue(b.publishedAt) - getPostTimestampValue(a.publishedAt));
 
     this.allPosts.set(allPosts);
+  }
+
+  private loadRecommendedFeeds(): void {
+    const userId = this.uid;
+    if (!userId) {
+      return;
+    }
+
+    this.isLoadingRecommendations.set(true);
+    forkJoin({
+      feeds: this.feedService.getAllFeeds(),
+      followedFeeds: this.feedService.getFeedsSubscribedTo(userId),
+    })
+      .pipe(finalize(() => this.isLoadingRecommendations.set(false)))
+      .subscribe({
+        next: ({ feeds, followedFeeds }) => {
+          const followedFeedIds = new Set(followedFeeds.map((feed) => feed.id));
+          this.recommendedFeeds.set(
+            feeds.filter((feed) => !followedFeedIds.has(feed.id)).slice(0, 5),
+          );
+        },
+        error: () => {
+          this.recommendedFeeds.set([]);
+        },
+      });
+  }
+
+  followRecommendedFeed(feed: Feed): void {
+    const userId = this.uid;
+    if (!userId || this.followingFeedIds().has(feed.id)) {
+      return;
+    }
+
+    this.followingFeedIds.update((ids) => new Set(ids).add(feed.id));
+    this.feedService.followAFeed(userId, feed.id).subscribe({
+      next: () => {
+        this.postService.clearGroupedPostsCache(userId);
+        this.loadRecommendedFeeds();
+        this.removeFollowingFeedId(feed.id);
+      },
+      error: () => this.removeFollowingFeedId(feed.id),
+    });
+  }
+
+  private removeFollowingFeedId(feedId: string): void {
+    this.followingFeedIds.update((ids) => {
+      const next = new Set(ids);
+      next.delete(feedId);
+      return next;
+    });
   }
 
   openArticle(url: string): void {

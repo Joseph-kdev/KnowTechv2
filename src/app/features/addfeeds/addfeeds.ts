@@ -2,6 +2,7 @@ import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Feeds } from '../../services/feeds';
 import { AuthService } from '../../services/authService';
+import { PostService } from '../../services/postService';
 import { finalize } from 'rxjs';
 import { Feed } from '../../types';
 
@@ -14,6 +15,7 @@ import { Feed } from '../../types';
 export class Addfeeds implements OnInit {
   private feedsService = inject(Feeds);
   private authService = inject(AuthService);
+  private postService = inject(PostService);
 
   readonly feedsAvailable = signal<Feed[]>([]);
   readonly followedFeedIds = signal<Set<string>>(new Set());
@@ -88,6 +90,10 @@ export class Addfeeds implements OnInit {
       this.toggleLocalFollow(feed.id);
       return;
     }
+
+    // Subscription changes alter the posts endpoint's result, so force its next
+    // visit to fetch a fresh feed rather than using the one-hour cache.
+    this.postService.clearGroupedPostsCache(uid);
 
     const isFollowing = this.followedFeedIds().has(feed.id);
     if (isFollowing) {

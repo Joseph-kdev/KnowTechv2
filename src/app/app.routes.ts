@@ -60,6 +60,10 @@ export const routes: Routes = [
         path: 'add',
         loadComponent: () => import('./features/addfeeds/addfeeds').then((m) => m.Addfeeds),
       },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile').then((m) => m.Profile),
+      },
     ],
   },
 

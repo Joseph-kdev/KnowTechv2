@@ -1,3 +1,514 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+
+/* ==========================================================================
+   Theme Transitions — sets a base duration/easing for UI elements.
+   Individual components declare their own transition-property
+   (e.g. via Tailwind's transition-all, transition-colors, etc.).
+   ========================================================================== */
+body, main, aside, nav, a, div, section, h1, h2, h3, p, span, button, input {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
+
+/* ==========================================================================
+   Base semantic tokens (Slate Horizon — default theme)
+   Registered via @theme so Tailwind generates utilities:
+   bg-background-500, text-primary-600, border-secondary-300, fill-accent-400, etc.
+   Individual theme classes below only override these values.
+   ========================================================================== */
+@theme {
+  /* Background — cool neutral slate. Standard direction: 50 lightest → 900 darkest */
+  --color-background-50: #f8fafc;
+  --color-background-100: #f1f5f9;
+  --color-background-200: #e2e8f0;
+  --color-background-300: #cbd5e1;
+  --color-background-400: #94a3b8;
+  --color-background-500: #64748b;
+  --color-background-600: #475569;
+  --color-background-700: #334155;
+  --color-background-800: #1e293b;
+  --color-background-900: #0f172a;
+
+  /* Primary — Indigo. Trust, focus, primary actions */
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #818cf8;
+  --color-primary-500: #6366f1;
+  --color-primary-600: #4f46e5;
+  --color-primary-700: #4338ca;
+  --color-primary-800: #3730a3;
+  --color-primary-900: #312e81;
+
+  /* Secondary — Teal. Analogous-cool companion to indigo, for secondary actions/tags */
+  --color-secondary-50: #f0fdfa;
+  --color-secondary-100: #ccfbf1;
+  --color-secondary-200: #99f6e4;
+  --color-secondary-300: #5eead4;
+  --color-secondary-400: #2dd4bf;
+  --color-secondary-500: #14b8a6;
+  --color-secondary-600: #0d9488;
+  --color-secondary-700: #0f766e;
+  --color-secondary-800: #115e59;
+  --color-secondary-900: #134e4a;
+
+  /* Accent — Amber. Complementary-warm pop for CTAs, badges, highlights */
+  --color-accent-50: #fffbeb;
+  --color-accent-100: #fef3c7;
+  --color-accent-200: #fde68a;
+  --color-accent-300: #fcd34d;
+  --color-accent-400: #fbbf24;
+  --color-accent-500: #f59e0b;
+  --color-accent-600: #d97706;
+  --color-accent-700: #b45309;
+  --color-accent-800: #92400e;
+  --color-accent-900: #78350f;
+
+  /* Text — aliased to the neutral background scale (900 = headings, 500 = muted, etc.) */
+  --color-text-50: var(--color-background-50);
+  --color-text-100: var(--color-background-100);
+  --color-text-200: var(--color-background-200);
+  --color-text-300: var(--color-background-300);
+  --color-text-400: var(--color-background-400);
+  --color-text-500: var(--color-background-500);
+  --color-text-600: var(--color-background-600);
+  --color-text-700: var(--color-background-700);
+  --color-text-800: var(--color-background-800);
+  --color-text-900: var(--color-background-900);
+
+  /* On-color — contrast-safe text/icon color for content placed on filled primary/secondary/accent elements */
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-accent: #422006;
+}
+
+/* ==========================================================================
+   Cyber Midnight (Neon Dark)
+   Relationship: violet primary + cyan secondary (near-complementary,
+   classic cyberpunk pairing) + fuchsia accent (triadic pop)
+   Existing --color-gray-* / --color-blue-* left untouched for compatibility.
+   ========================================================================== */
+.theme-cyber {
+  --color-white: #111116;
+  --color-gray-50: #07070a;
+  --color-gray-100: #1b1b22;
+  --color-gray-200: #262633;
+  --color-gray-300: #333346;
+  --color-gray-400: #555570;
+  --color-gray-500: #7c7c9c;
+  --color-gray-600: #9e9ec4;
+  --color-gray-800: #e2e2f5;
+  --color-gray-900: #ffffff;
+  --color-blue-50: #231242;
+  --color-blue-100: #3b196c;
+  --color-blue-600: #a855f7;
+  --color-blue-700: #c084fc;
+  --color-blue-800: #d8b4fe;
+
+  /* Background — inverted direction (50 darkest → 900 lightest) to match gray-* above */
+  --color-background-50: #07070a;
+  --color-background-100: #0d0d12;
+  --color-background-200: #1b1b22;
+  --color-background-300: #262633;
+  --color-background-400: #333346;
+  --color-background-500: #555570;
+  --color-background-600: #7c7c9c;
+  --color-background-700: #9e9ec4;
+  --color-background-800: #e2e2f5;
+  --color-background-900: #ffffff;
+
+  /* Primary — neon violet */
+  --color-primary-50: #231242;
+  --color-primary-100: #3b196c;
+  --color-primary-200: #551f96;
+  --color-primary-300: #6b21a8;
+  --color-primary-400: #7e22ce;
+  --color-primary-500: #9333ea;
+  --color-primary-600: #a855f7;
+  --color-primary-700: #c084fc;
+  --color-primary-800: #d8b4fe;
+  --color-primary-900: #f3e8ff;
+
+  /* Secondary — neon cyan (complements violet) */
+  --color-secondary-50: #042f2e;
+  --color-secondary-100: #0a4744;
+  --color-secondary-200: #115e59;
+  --color-secondary-300: #14746b;
+  --color-secondary-400: #0d9488;
+  --color-secondary-500: #14b8a6;
+  --color-secondary-600: #2dd4bf;
+  --color-secondary-700: #5eead4;
+  --color-secondary-800: #99f6e4;
+  --color-secondary-900: #ccfbf1;
+
+  /* Accent — neon fuchsia (triadic pop against violet + cyan) */
+  --color-accent-50: #4a044e;
+  --color-accent-100: #701a75;
+  --color-accent-200: #86198f;
+  --color-accent-300: #a21caf;
+  --color-accent-400: #c026d3;
+  --color-accent-500: #d946ef;
+  --color-accent-600: #e879f9;
+  --color-accent-700: #f0abfc;
+  --color-accent-800: #f5d0fe;
+  --color-accent-900: #fdf4ff;
+
+  --color-text-50: var(--color-background-50);
+  --color-text-100: var(--color-background-100);
+  --color-text-200: var(--color-background-200);
+  --color-text-300: var(--color-background-300);
+  --color-text-400: var(--color-background-400);
+  --color-text-500: var(--color-background-500);
+  --color-text-600: var(--color-background-600);
+  --color-text-700: var(--color-background-700);
+  --color-text-800: var(--color-background-800);
+  --color-text-900: var(--color-background-900);
+
+  /* Violet is mid-value → light text; cyan and fuchsia run bright → dark text for contrast */
+  --color-on-primary: #fdf4ff;
+  --color-on-secondary: #042f2e;
+  --color-on-accent: #4a044e;
+}
+
+/* ==========================================================================
+   Nordic Forest (Sage & Forest Green)
+   Relationship: forest-green primary + warm sand secondary (complementary
+   earthy pairing) + rust accent (analogous warm pop)
+   Existing --color-gray-* / --color-blue-* left untouched for compatibility.
+   ========================================================================== */
+.theme-nordic {
+  --color-white: #fcfdfc;
+  --color-gray-50: #f2f5f3;
+  --color-gray-100: #e3eae5;
+  --color-gray-200: #cbd7cf;
+  --color-gray-300: #afc0b4;
+  --color-gray-400: #7e9c87;
+  --color-gray-500: #5e7a68;
+  --color-gray-600: #3f5546;
+  --color-gray-800: #1f3224;
+  --color-gray-900: #111d14;
+  --color-blue-50: #e6f7f0;
+  --color-blue-100: #ccf1e1;
+  --color-blue-600: #059669;
+  --color-blue-700: #047857;
+  --color-blue-800: #065f46;
+
+  /* Background — standard direction, matches gray-* above */
+  --color-background-50: #fcfdfc;
+  --color-background-100: #f2f5f3;
+  --color-background-200: #e3eae5;
+  --color-background-300: #cbd7cf;
+  --color-background-400: #afc0b4;
+  --color-background-500: #7e9c87;
+  --color-background-600: #5e7a68;
+  --color-background-700: #3f5546;
+  --color-background-800: #2c4033;
+  --color-background-900: #111d14;
+
+  /* Primary — forest emerald */
+  --color-primary-50: #e6f7f0;
+  --color-primary-100: #ccf1e1;
+  --color-primary-200: #99e3c3;
+  --color-primary-300: #66d5a5;
+  --color-primary-400: #33c787;
+  --color-primary-500: #10b981;
+  --color-primary-600: #059669;
+  --color-primary-700: #047857;
+  --color-primary-800: #065f46;
+  --color-primary-900: #064e3b;
+
+  /* Secondary — warm sand/tan (complements the green) */
+  --color-secondary-50: #fdf8f0;
+  --color-secondary-100: #faedd8;
+  --color-secondary-200: #f3d9ae;
+  --color-secondary-300: #e9bd7d;
+  --color-secondary-400: #dc9f52;
+  --color-secondary-500: #c9812f;
+  --color-secondary-600: #a6621f;
+  --color-secondary-700: #7d4a18;
+  --color-secondary-800: #593413;
+  --color-secondary-900: #3a220e;
+
+  /* Accent — amber/rust (analogous warm pop) */
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #f97316;
+  --color-accent-600: #ea580c;
+  --color-accent-700: #c2410c;
+  --color-accent-800: #9a3412;
+  --color-accent-900: #7c2d12;
+
+  --color-text-50: var(--color-background-50);
+  --color-text-100: var(--color-background-100);
+  --color-text-200: var(--color-background-200);
+  --color-text-300: var(--color-background-300);
+  --color-text-400: var(--color-background-400);
+  --color-text-500: var(--color-background-500);
+  --color-text-600: var(--color-background-600);
+  --color-text-700: var(--color-background-700);
+  --color-text-800: var(--color-background-800);
+  --color-text-900: var(--color-background-900);
+
+  /* Emerald and rust are dark enough for white text; warm sand needs dark text */
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #3a220e;
+  --color-on-accent: #ffffff;
+}
+
+/* ==========================================================================
+   Sunset Ember (Warm Dark)
+   Relationship: burnt-orange primary + deep teal secondary (true
+   complementary pair) + golden accent (analogous warm highlight)
+   ========================================================================== */
+.theme-sunset {
+  --color-white: #1a120e;
+  --color-gray-50: #0f0a08;
+  --color-gray-100: #1a120e;
+  --color-gray-200: #2b1e17;
+  --color-gray-300: #3d2a20;
+  --color-gray-400: #5c4436;
+  --color-gray-500: #8a6a55;
+  --color-gray-600: #b39074;
+  --color-gray-700: #d4b8a2;
+  --color-gray-800: #ecdccf;
+  --color-gray-900: #fdf6f0;
+  --color-blue-50: #2e1005;
+  --color-blue-100: #4a1a08;
+  --color-blue-600: #f4713a;
+  --color-blue-700: #ff9159;
+  --color-blue-800: #ffb384;
+
+  --color-background-50: #0f0a08;
+  --color-background-100: #1a120e;
+  --color-background-200: #2b1e17;
+  --color-background-300: #3d2a20;
+  --color-background-400: #5c4436;
+  --color-background-500: #8a6a55;
+  --color-background-600: #b39074;
+  --color-background-700: #d4b8a2;
+  --color-background-800: #ecdccf;
+  --color-background-900: #fdf6f0;
+
+  --color-primary-50: #2e1005;
+  --color-primary-100: #4a1a08;
+  --color-primary-200: #6b2810;
+  --color-primary-300: #8f371a;
+  --color-primary-400: #b8481f;
+  --color-primary-500: #e05a24;
+  --color-primary-600: #f4713a;
+  --color-primary-700: #ff9159;
+  --color-primary-800: #ffb384;
+  --color-primary-900: #ffd9bb;
+
+  --color-secondary-50: #041f1d;
+  --color-secondary-100: #073431;
+  --color-secondary-200: #0e4d47;
+  --color-secondary-300: #146860;
+  --color-secondary-400: #1c8579;
+  --color-secondary-500: #26a396;
+  --color-secondary-600: #45c2b4;
+  --color-secondary-700: #74d8cc;
+  --color-secondary-800: #a8ebe1;
+  --color-secondary-900: #daf7f2;
+
+  --color-accent-50: #2b2005;
+  --color-accent-100: #46360a;
+  --color-accent-200: #6b5310;
+  --color-accent-300: #94741a;
+  --color-accent-400: #bd9722;
+  --color-accent-500: #e6ba2a;
+  --color-accent-600: #f5cf4d;
+  --color-accent-700: #f9de7f;
+  --color-accent-800: #fceab0;
+  --color-accent-900: #fef6dc;
+
+  --color-text-50: var(--color-background-50);
+  --color-text-100: var(--color-background-100);
+  --color-text-200: var(--color-background-200);
+  --color-text-300: var(--color-background-300);
+  --color-text-400: var(--color-background-400);
+  --color-text-500: var(--color-background-500);
+  --color-text-600: var(--color-background-600);
+  --color-text-700: var(--color-background-700);
+  --color-text-800: var(--color-background-800);
+  --color-text-900: var(--color-background-900);
+
+  /* Burnt orange and deep teal are dark enough for white text; gold needs dark text */
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-accent: #2b2005;
+}
+
+/* ==========================================================================
+   Ocean Depths (Cool Dark)
+   Relationship: cyan/azure primary + seafoam secondary (analogous cool pair)
+   + coral accent (true complementary pop)
+   ========================================================================== */
+.theme-ocean {
+  --color-white: #0a1120;
+  --color-gray-50: #05080f;
+  --color-gray-100: #0a1120;
+  --color-gray-200: #131f38;
+  --color-gray-300: #1d2f52;
+  --color-gray-400: #2e4670;
+  --color-gray-500: #4d6690;
+  --color-gray-600: #7690b3;
+  --color-gray-700: #a3bcd6;
+  --color-gray-800: #d0e2f0;
+  --color-gray-900: #f5faff;
+  --color-blue-50: #04212e;
+  --color-blue-100: #073649;
+  --color-blue-600: #3fc4e8;
+  --color-blue-700: #6fd6f2;
+  --color-blue-800: #a3e6f8;
+
+  --color-background-50: #05080f;
+  --color-background-100: #0a1120;
+  --color-background-200: #131f38;
+  --color-background-300: #1d2f52;
+  --color-background-400: #2e4670;
+  --color-background-500: #4d6690;
+  --color-background-600: #7690b3;
+  --color-background-700: #a3bcd6;
+  --color-background-800: #d0e2f0;
+  --color-background-900: #f5faff;
+
+  --color-primary-50: #04212e;
+  --color-primary-100: #073649;
+  --color-primary-200: #0b4f68;
+  --color-primary-300: #106a89;
+  --color-primary-400: #1789ab;
+  --color-primary-500: #22a8cc;
+  --color-primary-600: #3fc4e8;
+  --color-primary-700: #6fd6f2;
+  --color-primary-800: #a3e6f8;
+  --color-primary-900: #d4f4fc;
+
+  --color-secondary-50: #052015;
+  --color-secondary-100: #0a3324;
+  --color-secondary-200: #0f4a34;
+  --color-secondary-300: #156745;
+  --color-secondary-400: #1c8759;
+  --color-secondary-500: #26a86e;
+  --color-secondary-600: #45c489;
+  --color-secondary-700: #74d9a9;
+  --color-secondary-800: #a8ecc9;
+  --color-secondary-900: #daf7e8;
+
+  --color-accent-50: #2e0d0a;
+  --color-accent-100: #4a1610;
+  --color-accent-200: #6b221a;
+  --color-accent-300: #8f2f24;
+  --color-accent-400: #b83f30;
+  --color-accent-500: #e0523d;
+  --color-accent-600: #f16e57;
+  --color-accent-700: #f89380;
+  --color-accent-800: #fcbbae;
+  --color-accent-900: #fee2db;
+
+  --color-text-50: var(--color-background-50);
+  --color-text-100: var(--color-background-100);
+  --color-text-200: var(--color-background-200);
+  --color-text-300: var(--color-background-300);
+  --color-text-400: var(--color-background-400);
+  --color-text-500: var(--color-background-500);
+  --color-text-600: var(--color-background-600);
+  --color-text-700: var(--color-background-700);
+  --color-text-800: var(--color-background-800);
+  --color-text-900: var(--color-background-900);
+
+  /* Cyan runs bright → dark text; seafoam and coral are mid-value → white text */
+  --color-on-primary: #04212e;
+  --color-on-secondary: #ffffff;
+  --color-on-accent: #ffffff;
+}
+
+/* ==========================================================================
+   Royal Amethyst (Elegant Light)
+   Relationship: royal-purple primary + rose/mauve secondary (analogous
+   jewel-tone pair) + gold accent (split-complementary luxury highlight)
+   ========================================================================== */
+.theme-amethyst {
+  --color-white: #fbfaff;
+  --color-gray-50: #fbfaff;
+  --color-gray-100: #f4f2fb;
+  --color-gray-200: #e7e2f5;
+  --color-gray-300: #d3c9ea;
+  --color-gray-400: #b3a3d6;
+  --color-gray-500: #8f7dbd;
+  --color-gray-600: #6f5a9e;
+  --color-gray-700: #52407c;
+  --color-gray-800: #382b58;
+  --color-gray-900: #211936;
+  --color-blue-50: #f5f0ff;
+  --color-blue-100: #ebe0ff;
+  --color-blue-600: #6d28d9;
+  --color-blue-700: #5b1fb3;
+  --color-blue-800: #481a8c;
+
+  --color-background-50: #fbfaff;
+  --color-background-100: #f4f2fb;
+  --color-background-200: #e7e2f5;
+  --color-background-300: #d3c9ea;
+  --color-background-400: #b3a3d6;
+  --color-background-500: #8f7dbd;
+  --color-background-600: #6f5a9e;
+  --color-background-700: #52407c;
+  --color-background-800: #382b58;
+  --color-background-900: #211936;
+
+  --color-primary-50: #f5f0ff;
+  --color-primary-100: #ebe0ff;
+  --color-primary-200: #d8c2ff;
+  --color-primary-300: #bd97ff;
+  --color-primary-400: #9d68ff;
+  --color-primary-500: #8140f5;
+  --color-primary-600: #6d28d9;
+  --color-primary-700: #5b1fb3;
+  --color-primary-800: #481a8c;
+  --color-primary-900: #341466;
+
+  --color-secondary-50: #fdf2f6;
+  --color-secondary-100: #fbe5ee;
+  --color-secondary-200: #f6cbdd;
+  --color-secondary-300: #eea3c1;
+  --color-secondary-400: #e174a0;
+  --color-secondary-500: #cf4d80;
+  --color-secondary-600: #b23366;
+  --color-secondary-700: #8c2450;
+  --color-secondary-800: #66193a;
+  --color-secondary-900: #401025;
+
+  --color-accent-50: #fefaf0;
+  --color-accent-100: #fdf1d6;
+  --color-accent-200: #fadfa8;
+  --color-accent-300: #f5c874;
+  --color-accent-400: #eeab42;
+  --color-accent-500: #dd9224;
+  --color-accent-600: #b8781a;
+  --color-accent-700: #8f5c15;
+  --color-accent-800: #664111;
+  --color-accent-900: #40290b;
+
+  --color-text-50: var(--color-background-50);
+  --color-text-100: var(--color-background-100);
+  --color-text-200: var(--color-background-200);
+  --color-text-300: var(--color-background-300);
+  --color-text-400: var(--color-background-400);
+  --color-text-500: var(--color-background-500);
+  --color-text-600: var(--color-background-600);
+  --color-text-700: var(--color-background-700);
+  --color-text-800: var(--color-background-800);
+  --color-text-900: var(--color-background-900);
+
+  /* Purple and rose are dark enough for white text; gold needs dark text */
+  --color-on-primary: #ffffff;
+  --color-on-secondary: #ffffff;
+  --color-on-accent: #40290b;
+}

@@ -13,8 +13,8 @@ describe('Home', () => {
     expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should have 4 newsfeed articles', () => {
+  it('should start without loaded newsfeed articles', () => {
     const fixture = TestBed.createComponent(Home);
-    expect(fixture.componentInstance.newsfeedArticles.length).toBe(4);
+    expect(fixture.componentInstance.allPosts()).toEqual([]);
   });
 });
