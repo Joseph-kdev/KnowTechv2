@@ -1,59 +1,68 @@
-# Knowtechv2
+# KnowTech v2
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.4.
+KnowTech v2 is a modern Angular-based news reading application designed to feel like a personalized content hub rather than a generic feed. The app combines authentication, curated feed discovery, article bookmarking, and theme customization into a single portfolio-friendly experience.
 
-## Development server
+## What the app does
 
-To start a local development server, run:
+The current implementation includes:
 
-```bash
-ng serve
-```
+- User authentication with email/password and Google sign-in through Firebase Auth.
+- Protected routes so authenticated users can access the main app experience.
+- A home feed that loads grouped posts from a backend API and presents them in a card-style layout.
+- Feed discovery and subscription management, including searching available feeds and following or unfollowing them.
+- Bookmarking support so users can save articles for later viewing.
+- Multiple visual themes that can be selected from the profile area.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Tech stack
 
-## Code scaffolding
+- Angular 22
+- TypeScript
+- Tailwind CSS
+- Angular Fire and Firebase Authentication
+- RxJS
+- REST API integration for posts, feeds, and bookmarks
+- Vitest for unit testing
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Live preview
 
-```bash
-ng generate component component-name
-```
+[Live Preview](https://your-live-preview-url.example)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Local setup
 
-```bash
-ng generate --help
-```
+### Prerequisites
 
-## Building
+- Node.js 20 or newer
+- npm 10 or newer
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Installation
 
 ```bash
-ng test
+git clone <your-repo-url>
+cd knowtechv2
+npm install
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### Run locally
 
 ```bash
-ng e2e
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Then open http://localhost:4200/ in your browser.
 
-## Additional Resources
+### Backend requirement
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The frontend expects a compatible backend API to power the posts, feeds, and bookmarks experience. The backend is at this repo:[knowtech-go](https://github.com/Joseph-kdev/knowtech-go) and is written in Go.
+
+### Build for production
+
+```bash
+npm run build
+```
+
+## Project structure
+
+The application is organized around feature-based Angular components and services:
+
+- [src/app/features](src/app/features) contains the main screens such as authentication, home, bookmarks, feed management, and profile.
+- [src/app/services](src/app/services) contains the API and state services for auth, posts, bookmarks, and feeds.

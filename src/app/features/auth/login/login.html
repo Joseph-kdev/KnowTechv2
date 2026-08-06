@@ -51,7 +51,7 @@
           pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
           [class.is-invalid]="emailField.invalid && emailField.touched"
           required
-          class="w-full pl-10 pr-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-[#2D6A4F] focus:bg-white focus:ring-2 focus:ring-[#2D6A4F]/10 transition-all duration-200"
+          class="w-full pl-10 pr-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 transition-all duration-200"
         />
       @if (emailField.invalid && emailField.touched) {
         <div class="text-xs text-red-500 flex items-center gap-1 absolute">
@@ -98,7 +98,7 @@
           minlength="7"
           [class.is-invalid]="pwdField.invalid && pwdField.touched"
           required
-          class="w-full pl-10 pr-12 py-3.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-[#2D6A4F] focus:bg-white focus:ring-2 focus:ring-[#2D6A4F]/10 transition-all duration-200"
+          class="w-full pl-10 pr-12 py-3.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder:text-gray-400 focus:outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 transition-all duration-200"
         />
         <button
           type="button"
@@ -149,7 +149,7 @@
 
       <!-- Forgot password -->
       <div class="flex justify-end">
-        <a href="#" class="text-xs text-gray-400 hover:text-[#2D6A4F] transition-colors"
+        <a href="#" class="text-xs text-gray-400 hover:text-primary-600 transition-colors"
           >Forgot password?</a
         >
       </div>
@@ -158,7 +158,7 @@
       <button
         type="submit"
         [disabled]="isLoading() || loginForm.invalid"
-        class="w-full bg-gray-900 hover:bg-[#2D6A4F] text-white font-semibold text-sm py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-gray-900/30 active:scale-[0.99]"
+        class="w-full bg-primary-600 hover:bg-primary-700 text-on-primary font-semibold text-sm py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-primary-600/30 active:scale-[0.99] cursor-pointer"
       >
         @if (!isLoading()) {
           <span>Sign in</span>
@@ -221,86 +221,62 @@
     <!-- Register -->
     <p class="fade-in-5 mt-4 text-sm text-gray-400">
       No account?
-      <a routerLink="/register" class="text-[#2D6A4F] font-medium cursor-pointer hover:underline ml-1">Create one free →</a>
+      <a routerLink="/register" class="text-primary-600 font-medium cursor-pointer hover:underline ml-1">Create one free →</a>
     </p>
   </div>
 
   <!-- RIGHT PANEL: RSS Feed Illustration -->
-  <div
-    class="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden p-12 min-h-screen"
-  >
+  <div class="hidden lg:flex lg:w-1/2 flex-col items-center justify-center relative overflow-hidden p-12 min-h-screen">
+
     <!-- Unsplash background photo -->
-    <div
-      class="absolute inset-0 bg-cover bg-center"
-      style="
-        background-image: url('https://images.unsplash.com/photo-1749703821652-c43ccda0874e?fm=jpg&amp;q=80&amp;w=1600&amp;auto=format&amp;fit=crop');
-      "
-    ></div>
+    <div class="absolute inset-0 bg-cover bg-center"
+         style="background-image: url('https://images.unsplash.com/photo-1749703821652-c43ccda0874e?fm=jpg&amp;q=80&amp;w=1600&amp;auto=format&amp;fit=crop');">
+    </div>
 
     <!-- Gradient overlay for legibility + brand tint -->
-    <div
-      class="absolute inset-0 bg-linear-to-b from-[#1A3A2A]/70 via-[#1A3A2A]/55 to-[#0F2419]/85"
-    ></div>
-    <div class="absolute inset-0 bg-[#2D6A4F]/10"></div>
+    <div class="absolute inset-0 brand-gradient"></div>
+    <div class="absolute inset-0 brand-tint"></div>
+
 
     <!-- Central content area -->
     <div class="relative z-10 flex flex-col items-center w-full max-w-sm">
+
       <!-- Tagline above the stream -->
-      <div class="mb-5 text-center">
-        <span
-          class="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-full px-3 py-1.5 text-white text-xs font-medium"
-        >
-          <span
-            class="w-1.5 h-1.5 rounded-full bg-[#52B788]"
-            style="animation: pulse-dot 1.5s ease-in-out infinite"
-          ></span>
-          New articles streaming in
+      <div class="mb-4 text-center">
+        <span class="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-full px-3 py-1.5 text-white text-xs font-medium">
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-glow" style="animation: pulse-dot 1.5s ease-in-out infinite;"></span>
+          Join thousands organizing their feeds
         </span>
       </div>
 
       <!-- Streaming feed cards -->
-      <div class="feed-list w-full flex flex-col gap-2.5 overflow-hidden" style="max-height: 320px">
+      <div class="feed-list w-full flex flex-col gap-2.5 overflow-hidden" style="max-height: 320px;">
         @for (item of visibleItems(); track item.id) {
-          <div
-            class="feed-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100/80 flex items-start gap-3"
-            [class.entering]="item.entering"
-          >
+          <div class="feed-card bg-white rounded-2xl p-4 shadow-sm border border-gray-100/80 flex items-start gap-3"
+               [class.entering]="item.entering">
             <!-- Source icon -->
             <div class="relative flex-shrink-0">
-              <div
-                class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
-                [style.background]="item.sourceColor"
-              >
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[10px] font-bold shadow-sm"
+                   [style.background]="item.sourceColor">
                 {{ item.source.substring(0, 2).toUpperCase() }}
               </div>
               @if (item.entering) {
-                <span
-                  class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#2D6A4F] border-2 border-white"
-                  style="animation: pulse-dot 1.2s ease-in-out 3"
-                ></span>
+                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-secondary-500 border-2 border-white"
+                      style="animation: pulse-dot 1.2s ease-in-out 3;"></span>
               }
             </div>
 
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-2 mb-1">
-                <span class="text-[11px] font-semibold truncate" [style.color]="item.sourceColor">{{
-                  item.source
-                }}</span>
+                <span class="text-[11px] font-semibold truncate" [style.color]="item.sourceColor">{{ item.source }}</span>
                 <span class="text-[10px] text-gray-300 flex-shrink-0">·</span>
                 <span class="text-[10px] text-gray-400 flex-shrink-0">{{ item.time }}</span>
-                <span
-                  class="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0"
-                  [style.background]="item.sourceColor"
-                  [style.opacity]="item.entering ? '1' : '0'"
-                ></span>
+                <span class="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0"
+                      [style.background]="item.sourceColor"
+                      [style.opacity]="item.entering ? '1' : '0'"></span>
               </div>
-              <p class="text-xs text-gray-700 font-medium leading-snug line-clamp-1">
-                {{ item.title }}
-              </p>
-              <span
-                class="inline-block mt-1.5 text-[10px] px-2 py-0.5 rounded-full font-medium"
-                [class]="item.tagColor"
-              >
+              <p class="text-xs text-gray-700 font-medium leading-snug line-clamp-1">{{ item.title }}</p>
+              <span class="inline-block mt-1.5 text-[10px] px-2 py-0.5 rounded-full font-medium" [class]="item.tagColor">
                 {{ item.tag }}
               </span>
             </div>
@@ -309,37 +285,30 @@
       </div>
 
       <!-- Stream status bar -->
-      <div class="flex items-center gap-2 mt-3 px-1">
-        <span
-          class="w-1.5 h-1.5 rounded-full bg-[#52B788]"
-          style="animation: pulse-dot 1.8s ease-in-out infinite"
-        ></span>
-        <span class="text-[11px] text-white/70 font-medium"
-          >Live feed · {{ visibleItems().length }} recent</span
-        >
+      <div class="flex items-center gap-2 mt-2 px-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-glow" style="animation: pulse-dot 1.8s ease-in-out infinite;"></span>
+        <span class="text-[11px] text-white/70 font-medium">Live feed · {{ visibleItems().length }} recent</span>
         <div class="ml-auto flex gap-1">
           @for (src of feedSources; track src.abbr) {
-            <div
-              class="w-1 h-3 rounded-full"
-              [style.background]="src.color"
-              style="opacity: 0.7"
-            ></div>
+            <div class="w-1 h-3 rounded-full" [style.background]="src.color" style="opacity:0.7;"></div>
           }
         </div>
       </div>
     </div>
 
     <!-- Bottom caption -->
-    <div class="relative z-10 mt-5 text-center">
-      <p class="text-white/80 text-base leading-snug">All your feeds, one clean inbox.</p>
+    <div class="relative z-10 mt-4 text-center">
+      <p class="text-white/80 text-base leading-snug">
+        Free forever. No credit card needed.
+      </p>
       <p class="text-white font-bold text-base">
-        Stay on top of what you love with <span class="text-[#52B788]">KnowTech</span>.
+        Build your reading ritual with <span class="text-brand-glow">KnowTech</span>.
       </p>
 
       <!-- Dot indicators -->
       <div class="flex items-center justify-center gap-2 mt-4">
-        <div class="w-6 h-1.5 rounded-full bg-[#52B788]"></div>
         <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
+        <div class="w-6 h-1.5 rounded-full bg-brand-glow"></div>
         <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
       </div>
     </div>
@@ -353,7 +322,7 @@
         background-image: url('https://images.unsplash.com/photo-1749703821652-c43ccda0874e?fm=jpg&amp;q=70&amp;w=800&amp;auto=format&amp;fit=crop');
       "
     ></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-[#1A3A2A]/75 to-[#0F2419]/85"></div>
+    <div class="absolute inset-0 brand-gradient opacity-85"></div>
     <div class="relative z-10">
       <div class="flex items-center justify-center gap-3 mb-4">
         @for (source of feedSources.slice(0, 3); track source.name) {
@@ -372,9 +341,7 @@
           </div>
         }
       </div>
-      <p class="text-sm text-white/80">
-        New articles streaming in. All your feeds, one clean place.
-      </p>
+      <p class="text-sm text-white/80">Free forever. Build your reading ritual with KnowTech.</p>
     </div>
   </div>
 </div>

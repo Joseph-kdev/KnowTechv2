@@ -36,7 +36,7 @@ export class BookmarkService {
   bookmarkedUrlsArray = computed(() => Array.from(this.bookmarkedUrls()));
 
   constructor() {
-    const stored = localStorage.getItem('bookmarks_data');
+    const stored = sessionStorage.getItem('bookmarks_data');
     if (stored) {
       try {
         this.bookmarks.set(JSON.parse(stored) as Bookmark[]);
@@ -47,7 +47,7 @@ export class BookmarkService {
 
     effect(() => {
       const bookmarks = this.bookmarks();
-      localStorage.setItem('bookmarks_data', JSON.stringify(bookmarks));
+      sessionStorage.setItem('bookmarks_data', JSON.stringify(bookmarks));
     });
 
     effect(() => {

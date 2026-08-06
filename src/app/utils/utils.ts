@@ -1,4 +1,4 @@
-export const serverUrl = "http://localhost:8000/api/"
+export const serverUrl = "https://knowtech-go.vercel.app/api/"
 
 export function extractFirstImg(html: string): string | null {
   if (!html) return null;

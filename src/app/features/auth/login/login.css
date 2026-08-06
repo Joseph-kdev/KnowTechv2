@@ -1,5 +1,3 @@
-@import "tailwindcss";
-
 :root {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -57,3 +55,62 @@ body { margin: 0; padding: 0; }
     opacity: 1 !important;
   }
 }
+
+:host {
+  --brand-dark-primary: var(--color-primary-900);
+  --brand-dark-bg: var(--color-background-900);
+  --brand-accent-glow: var(--color-accent-400);
+}
+
+:host-context(.theme-cyber) {
+  --brand-dark-primary: var(--color-primary-50);
+  --brand-dark-bg: var(--color-background-50);
+  --brand-accent-glow: var(--color-accent-500);
+}
+
+:host-context(.theme-nordic) {
+  --brand-dark-primary: var(--color-primary-900);
+  --brand-dark-bg: var(--color-background-900);
+  --brand-accent-glow: var(--color-accent-500);
+}
+
+:host-context(.theme-sunset) {
+  --brand-dark-primary: var(--color-primary-50);
+  --brand-dark-bg: var(--color-background-50);
+  --brand-accent-glow: var(--color-accent-500);
+}
+
+:host-context(.theme-ocean) {
+  --brand-dark-primary: var(--color-primary-50);
+  --brand-dark-bg: var(--color-background-50);
+  --brand-accent-glow: var(--color-accent-500);
+}
+
+:host-context(.theme-amethyst) {
+  --brand-dark-primary: var(--color-primary-900);
+  --brand-dark-bg: var(--color-background-900);
+  --brand-accent-glow: var(--color-accent-500);
+}
+
+.brand-gradient {
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--brand-dark-primary) 80%, transparent) 0%,
+    color-mix(in srgb, var(--brand-dark-primary) 65%, transparent) 50%,
+    color-mix(in srgb, var(--brand-dark-bg) 92%, transparent) 100%
+  );
+}
+
+.brand-tint {
+  background-color: var(--brand-dark-primary);
+  opacity: 0.2;
+}
+
+.text-brand-glow {
+  color: var(--brand-accent-glow);
+}
+
+.bg-brand-glow {
+  background-color: var(--brand-accent-glow);
+}
+

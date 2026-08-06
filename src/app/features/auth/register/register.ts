@@ -208,7 +208,7 @@ export class Register {
       case 2:
         return '#F59E0B';
       case 3:
-        return '#2D6A4F';
+        return 'var(--color-secondary-500)';
       default:
         return '#E5E7EB';
     }

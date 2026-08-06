@@ -39,7 +39,7 @@
           name="email"
           required
           class="w-full pl-10 pr-4 py-3.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder:text-gray-400
-                 focus:outline-none focus:border-[#2D6A4F] focus:bg-white focus:ring-2 focus:ring-[#2D6A4F]/10 transition-all duration-200"
+                 focus:outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 transition-all duration-200"
         />
       </div>
 
@@ -61,7 +61,7 @@
             required
             minlength="8"
             class="w-full pl-10 pr-12 py-3.5 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 text-sm placeholder:text-gray-400
-                   focus:outline-none focus:border-[#2D6A4F] focus:bg-white focus:ring-2 focus:ring-[#2D6A4F]/10 transition-all duration-200"
+                   focus:outline-none focus:border-primary-500 focus:bg-white focus:ring-2 focus:ring-primary-500/10 transition-all duration-200"
           />
           <button
             type="button"
@@ -114,9 +114,9 @@
           class="w-full pl-10 pr-12 py-3.5 rounded-xl border bg-gray-50 text-gray-900 text-sm placeholder:text-gray-400
                  focus:outline-none focus:bg-white focus:ring-2 transition-all duration-200"
           [class.border-gray-200]="!passwordsMatch() && !passwordsMismatch()"
-          [class.border-[#2D6A4F]]="passwordsMatch()"
+          [class.border-primary-500]="passwordsMatch()"
           [class.ring-2]="passwordsMatch() || passwordsMismatch()"
-          [class.ring-[#2D6A4F]/10]="passwordsMatch()"
+          [class.ring-primary-500/10]="passwordsMatch()"
           [class.border-red-300]="passwordsMismatch()"
           [class.ring-red-100]="passwordsMismatch()"
         />
@@ -146,8 +146,8 @@
           type="button"
           (click)="toggleTerms()"
           class="mt-0.5 flex-shrink-0 w-4 h-4 rounded border flex items-center justify-center transition-all duration-150"
-          [class.bg-[#2D6A4F]]="agreedToTerms()"
-          [class.border-[#2D6A4F]]="agreedToTerms()"
+          [class.bg-primary-600]="agreedToTerms()"
+          [class.border-primary-600]="agreedToTerms()"
           [class.border-gray-300]="!agreedToTerms()"
           [class.bg-white]="!agreedToTerms()"
           aria-label="Agree to terms"
@@ -159,8 +159,8 @@
           }
         </button>
         <span class="text-xs text-gray-500 leading-relaxed">
-          I agree to the <a href="#" class="text-gray-700 font-medium hover:text-[#2D6A4F] underline">Terms of Service</a>
-          and <a href="#" class="text-gray-700 font-medium hover:text-[#2D6A4F] underline">Privacy Policy</a>
+          I agree to the <a href="#" class="text-gray-700 font-medium hover:text-primary-600 underline">Terms of Service</a>
+          and <a href="#" class="text-gray-700 font-medium hover:text-primary-600 underline">Privacy Policy</a>
         </span>
       </label>
 
@@ -168,9 +168,9 @@
       <button
         type="submit"
         [disabled]="!canSubmit || isLoading()"
-        class="w-full bg-gray-900 hover:bg-[#2D6A4F] text-white font-semibold text-sm py-3.5 rounded-xl
-               transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-gray-900
-               focus:outline-none focus:ring-2 focus:ring-gray-900/30 active:scale-[0.99] cursor-pointer"
+        class="w-full bg-primary-600 hover:bg-primary-700 text-on-primary font-semibold text-sm py-3.5 rounded-xl
+               transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-primary-600
+               focus:outline-none focus:ring-2 focus:ring-primary-600/30 active:scale-[0.99] cursor-pointer"
       >
         <span *ngIf="!isLoading()">Create account</span>
         <span *ngIf="isLoading()" class="flex items-center gap-2">
@@ -205,7 +205,7 @@
     <!-- Login link -->
     <p class="fade-in-5 mt-8 text-sm text-gray-400">
       Already have an account?
-      <a routerLink="/login" class="text-[#2D6A4F] font-medium hover:underline ml-1 cursor-pointer">Sign in →</a>
+      <a routerLink="/login" class="text-primary-600 font-medium hover:underline ml-1 cursor-pointer">Sign in →</a>
     </p>
   </div>
 
@@ -218,8 +218,8 @@
     </div>
 
     <!-- Gradient overlay for legibility + brand tint -->
-    <div class="absolute inset-0 bg-gradient-to-b from-[#1A3A2A]/70 via-[#1A3A2A]/55 to-[#0F2419]/85"></div>
-    <div class="absolute inset-0 bg-[#2D6A4F]/10"></div>
+    <div class="absolute inset-0 brand-gradient"></div>
+    <div class="absolute inset-0 brand-tint"></div>
 
 
     <!-- Central content area -->
@@ -228,7 +228,7 @@
       <!-- Tagline above the stream -->
       <div class="mb-4 text-center">
         <span class="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-full px-3 py-1.5 text-white text-xs font-medium">
-          <span class="w-1.5 h-1.5 rounded-full bg-[#52B788]" style="animation: pulse-dot 1.5s ease-in-out infinite;"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-brand-glow" style="animation: pulse-dot 1.5s ease-in-out infinite;"></span>
           Join thousands organizing their feeds
         </span>
       </div>
@@ -245,7 +245,7 @@
                 {{ item.source.substring(0, 2).toUpperCase() }}
               </div>
               @if (item.entering) {
-                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#2D6A4F] border-2 border-white"
+                <span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-secondary-500 border-2 border-white"
                       style="animation: pulse-dot 1.2s ease-in-out 3;"></span>
               }
             </div>
@@ -270,7 +270,7 @@
 
       <!-- Stream status bar -->
       <div class="flex items-center gap-2 mt-2 px-1">
-        <span class="w-1.5 h-1.5 rounded-full bg-[#52B788]" style="animation: pulse-dot 1.8s ease-in-out infinite;"></span>
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-glow" style="animation: pulse-dot 1.8s ease-in-out infinite;"></span>
         <span class="text-[11px] text-white/70 font-medium">Live feed · {{ visibleItems().length }} recent</span>
         <div class="ml-auto flex gap-1">
           @for (src of feedSources; track src.abbr) {
@@ -286,13 +286,13 @@
         Free forever. No credit card needed.
       </p>
       <p class="text-white font-bold text-base">
-        Build your reading ritual with <span class="text-[#52B788]">KnowTech</span>.
+        Build your reading ritual with <span class="text-brand-glow">KnowTech</span>.
       </p>
 
       <!-- Dot indicators -->
       <div class="flex items-center justify-center gap-2 mt-4">
         <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
-        <div class="w-6 h-1.5 rounded-full bg-[#52B788]"></div>
+        <div class="w-6 h-1.5 rounded-full bg-brand-glow"></div>
         <div class="w-1.5 h-1.5 rounded-full bg-white/30"></div>
       </div>
     </div>
@@ -302,7 +302,7 @@
   <div class="lg:hidden relative px-8 py-8 text-center overflow-hidden">
     <div class="absolute inset-0 bg-cover bg-center"
          style="background-image: url('https://images.unsplash.com/photo-1749703821652-c43ccda0874e?fm=jpg&amp;q=70&amp;w=800&amp;auto=format&amp;fit=crop');"></div>
-    <div class="absolute inset-0 bg-gradient-to-b from-[#1A3A2A]/75 to-[#0F2419]/85"></div>
+    <div class="absolute inset-0 brand-gradient opacity-85"></div>
     <div class="relative z-10">
       <div class="flex items-center justify-center gap-3 mb-4">
         @for (source of feedSources.slice(0,3); track source.name) {
