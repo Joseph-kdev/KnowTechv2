@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "buildCommand": "ng build",
-  "outputDirectory": "dist/knowtechv2",
+  "outputDirectory": "dist/knowtechv2/browser",
   "installCommand": "npm install --legacy-peer-deps"
 }
