@@ -20,6 +20,7 @@
     "@angular/router": "^22.0.0",
     "firebase": "^12.15.0",
     "lightningcss": "^1.33.0",
+    "ngx-spinner": "^21.1.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

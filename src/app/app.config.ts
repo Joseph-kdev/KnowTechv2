@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './services/auth-interceptor';
+import { provideSpinnerConfig } from 'ngx-spinner';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideAuth(() => getAuth()),
     provideHttpClient(withInterceptors([
       authInterceptor
-    ]))
+    ])),
+    provideSpinnerConfig({ type: 'ball-scale-multiple' })
   ]
 };

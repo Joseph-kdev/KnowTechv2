@@ -8,17 +8,22 @@ import { finalize, forkJoin } from 'rxjs';
 import { extractFirstImg, formatTimestamp, getPostTimestampValue } from '../../utils/utils';
 import { CommonModule } from '@angular/common';
 import { Feed, FeedGroup } from '../../types';
+import { NgxSpinnerService, NgxSpinnerComponent } from 'ngx-spinner';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, ArticleCardComponent],
+  imports: [CommonModule, ArticleCardComponent, NgxSpinnerComponent],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
+  private readonly spinnerName = 'newsfeed';
+  private readonly recomSpinner = 'recommend';
+
   postService = inject(PostService);
   auth = inject(AuthService);
   uid = this.auth._user()?.uid;
+  spinner = inject(NgxSpinnerService);
 
   readonly isLoading = signal(false);
   readonly isError = signal(false);
@@ -51,11 +56,13 @@ export class Home implements OnInit {
 
   loadPosts() {
     this.isLoading.set(true);
+    this.spinner.show(this.spinnerName);
     this.postService
       .getGroupedPosts(this.uid as string)
       .pipe(
         finalize(() => {
           this.isLoading.set(false);
+          this.spinner.hide(this.spinnerName);
         }),
       )
       .subscribe({
@@ -95,11 +102,17 @@ export class Home implements OnInit {
     }
 
     this.isLoadingRecommendations.set(true);
+    this.spinner.show(this.recomSpinner);
     forkJoin({
       feeds: this.feedService.getAllFeeds(),
       followedFeeds: this.feedService.getFeedsSubscribedTo(userId),
     })
-      .pipe(finalize(() => this.isLoadingRecommendations.set(false)))
+      .pipe(
+        finalize(() => {
+          this.isLoadingRecommendations.set(false);
+          this.spinner.hide(this.recomSpinner)
+        }),
+      )
       .subscribe({
         next: ({ feeds, followedFeeds }) => {
           const followedFeedIds = new Set(followedFeeds.map((feed) => feed.id));

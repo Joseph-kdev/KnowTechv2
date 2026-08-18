@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { ArticleCardComponent, type DisplayArticle } from './article-card/article-card';
 import { extractFirstImg, formatTimestamp, getPostTimestampValue } from '../../utils/utils';
 import { FeedGroup } from '../../types';
+import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
 
 interface Post {
   id: string;
@@ -27,14 +28,17 @@ interface DisplayFeed {
 @Component({
   selector: 'app-posts',
   standalone: true,
-  imports: [FormsModule, ArticleCardComponent],
+  imports: [FormsModule, ArticleCardComponent, NgxSpinnerComponent],
   templateUrl: './posts.html',
   styleUrl: './posts.css',
 })
 export class Posts implements OnInit {
+  private readonly spinnerName = 'posts';
+
   auth = inject(AuthService);
   postService = inject(PostService);
   bookmarkService = inject(BookmarkService);
+  spinner = inject(NgxSpinnerService);
   uid = this.auth._user()?.uid;
 
   readonly feedsExpanded = signal(true);
@@ -53,11 +57,13 @@ export class Posts implements OnInit {
 
   loadPosts(): void {
     this.isLoading.set(true);
+    this.spinner.show(this.spinnerName);
     this.postService
       .getGroupedPosts(this.uid as string)
       .pipe(
         finalize(() => {
           this.isLoading.set(false);
+          this.spinner.hide(this.spinnerName);
         }),
       )
       .subscribe({

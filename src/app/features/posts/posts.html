@@ -188,7 +188,13 @@
 
     <!-- Article Grid -->
     @if (isLoading()) {
-      <div class="flex-1 flex items-center justify-center">
+      <div class="relative flex-1 flex items-center justify-center min-h-[240px]">
+        <ngx-spinner
+          [fullScreen]="false"
+          name="posts"
+          type="square-jelly-box"
+          size="medium"
+        ></ngx-spinner>
         <div class="text-gray-500">Loading posts...</div>
       </div>
     } @else {
