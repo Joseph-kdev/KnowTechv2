@@ -9,6 +9,7 @@ import { extractFirstImg, formatTimestamp, getPostTimestampValue } from '../../u
 import { CommonModule } from '@angular/common';
 import { Feed, FeedGroup } from '../../types';
 import { NgxSpinnerService, NgxSpinnerComponent } from 'ngx-spinner';
+import { HotToastService } from '@ngxpert/hot-toast';
 
 @Component({
   selector: 'app-home',
@@ -24,6 +25,7 @@ export class Home implements OnInit {
   auth = inject(AuthService);
   uid = this.auth._user()?.uid;
   spinner = inject(NgxSpinnerService);
+  private toastService = inject(HotToastService)
 
   readonly isLoading = signal(false);
   readonly isError = signal(false);
@@ -136,10 +138,14 @@ export class Home implements OnInit {
     this.feedService.followAFeed(userId, feed.id).subscribe({
       next: () => {
         this.postService.clearGroupedPostsCache(userId);
+        this.toastService.success(`Followed ${feed.name} successfully`)
         this.loadRecommendedFeeds();
         this.removeFollowingFeedId(feed.id);
       },
-      error: () => this.removeFollowingFeedId(feed.id),
+      error: () => {
+        this.toastService.error(`Unable to follow ${feed.name}`)
+        this.removeFollowingFeedId(feed.id)
+      },
     });
   }
 

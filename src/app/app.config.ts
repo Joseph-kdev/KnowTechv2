@@ -8,6 +8,7 @@ import { getAuth, provideAuth } from '@angular/fire/auth';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './services/auth-interceptor';
 import { provideSpinnerConfig } from 'ngx-spinner';
+import { provideHotToastConfig } from "@ngxpert/hot-toast";
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,6 +19,11 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([
       authInterceptor
     ])),
-    provideSpinnerConfig({ type: 'ball-scale-multiple' })
+    provideSpinnerConfig({ type: 'ball-scale-multiple' }),
+    provideHotToastConfig({
+      position: 'top-center',
+      dismissible: true,
+      duration: 1300
+    })
   ]
 };

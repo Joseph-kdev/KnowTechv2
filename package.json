@@ -18,6 +18,8 @@
     "@angular/forms": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
+    "@ngneat/overview": "^6.0.0",
+    "@ngxpert/hot-toast": "^6.4.1",
     "firebase": "^12.15.0",
     "lightningcss": "^1.33.0",
     "ngx-spinner": "^21.1.0",

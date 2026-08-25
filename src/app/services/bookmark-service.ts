@@ -4,6 +4,7 @@ import { Subscription, tap } from 'rxjs';
 import { serverUrl } from '../utils/utils';
 import { AuthService } from './authService';
 import { DisplayArticle } from '../features/posts/article-card/article-card';
+import { HotToastService } from '@ngxpert/hot-toast';
 
 export interface Bookmark {
   id: string;
@@ -20,6 +21,7 @@ export interface Bookmark {
 export class BookmarkService {
   readonly http = inject(HttpClient);
   readonly auth = inject(AuthService);
+  private toastService = inject(HotToastService)
 
   readonly bookmarks = signal<Bookmark[]>([]);
   private activeBookmarkLoad?: Subscription;
@@ -68,6 +70,7 @@ export class BookmarkService {
     published_at,
   }: Omit<Bookmark, 'id'>) {
     if (!user_id) {
+      this.toastService.error("User not authenticated");
       throw new Error('User not authenticated');
     }
 
@@ -138,7 +141,14 @@ export class BookmarkService {
     if (this.isArticleBookmarked(article.url)) {
       const bookmark = this.bookmarks().find((b) => b.url === article.url);
       if (bookmark) {
-        this.RemoveBookmark(currentUserId, bookmark.id).subscribe();
+        this.RemoveBookmark(currentUserId, bookmark.id).subscribe({
+          next: () => {
+            this.toastService.success("Bookmark deleted");
+          },
+          error: () => {
+            this.toastService.error("Error deleting bookmark")
+          }
+        });
       }
     } else {
       this.AddBookmark({
@@ -149,7 +159,14 @@ export class BookmarkService {
         feed_id: article.feedId ?? '',
         feed_name: article.badge ?? '',
         published_at: article.publishedAt ?? '',
-      }).subscribe();
+      }).subscribe({
+        next: () => {
+          this.toastService.success("Bookmark added successfully");
+        },
+        error: () => {
+          this.toastService.error("Error adding bookmark");
+        }
+      });
     }
   }
 

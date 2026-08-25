@@ -5,6 +5,7 @@ import { AuthService } from '../../services/authService';
 import { PostService } from '../../services/postService';
 import { finalize } from 'rxjs';
 import { Feed } from '../../types';
+import { HotToastService } from '@ngxpert/hot-toast';
 
 @Component({
   selector: 'app-addfeeds',
@@ -23,6 +24,8 @@ export class Addfeeds implements OnInit {
   readonly isLoading = signal<boolean>(false);
   readonly isError = signal<string | null>(null);
   uid = this.authService._user()?.uid;
+
+  private toastService = inject(HotToastService)
 
   // Filter feeds based on search query (case-insensitive search on name, category, or URL)
   readonly filteredFeeds = computed(() => {
@@ -84,6 +87,7 @@ export class Addfeeds implements OnInit {
   toggleFollow(feed: Feed) {
     const uid = this.authService._user()?.uid;
     if (!uid) {
+      this.toastService.error("User ID is not available. Please login again");
       console.warn(
         'User UID is not available from Firebase Auth. Defaulting to local preview toggle.',
       );
@@ -101,7 +105,11 @@ export class Addfeeds implements OnInit {
       this.removeFollowId(feed.id);
       this.updateFeedFollowercount(feed.id, -1)
       this.feedsService.unfollowAFeed(uid, feed.id).subscribe({
+        next: () => {
+          this.toastService.success(`${feed.name} unfollowed`);
+        },
         error: (err) => {
+          this.toastService.error("Failed to unfollow feed on server")
           console.error('Failed to unfollow feed on server, reverting state', err);
           this.addFollowId(feed.id);
         },
@@ -111,7 +119,11 @@ export class Addfeeds implements OnInit {
       this.addFollowId(feed.id);
       this.updateFeedFollowercount(feed.id, +1)
       this.feedsService.followAFeed(uid, feed.id).subscribe({
+        next: () => {
+          this.toastService.success(`Successfully followed ${feed.name}`)
+        },
         error: (err) => {
+          this.toastService.error("Failed to follow feed on server")
           console.error('Failed to follow feed on server, reverting state', err);
           this.removeFollowId(feed.id);
         },
@@ -121,7 +133,7 @@ export class Addfeeds implements OnInit {
 
   private updateFeedFollowercount(feedId: string, delta: number) {
     const currentFeeds = this.feedsAvailable()
-    const updatedFeeds = currentFeeds.map(f => 
+    const updatedFeeds = currentFeeds.map(f =>
       f.id === feedId
         ? { ...f, feed_followers_count: (f.feed_followers_count ?? 0) + delta}
         : f

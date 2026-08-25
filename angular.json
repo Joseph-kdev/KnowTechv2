@@ -27,7 +27,9 @@
             "styles": [
               "src/styles.css",
               "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
-              "node_modules/ngx-spinner/animations/square-jelly-box.css"
+              "node_modules/ngx-spinner/animations/square-jelly-box.css",
+              "@ngxpert/hot-toast/styles.css",
+              "@ngxpert/hot-toast/themes/glassmorphism.css"
             ]
           },
           "configurations": {
