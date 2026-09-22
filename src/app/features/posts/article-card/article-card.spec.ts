@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core';
 import { ArticleCardComponent } from './article-card';
 
 describe('ArticleCardComponent', () => {
@@ -31,5 +31,17 @@ describe('ArticleCardComponent', () => {
     expect(compiled.textContent).toContain('TechCrunch');
     expect(compiled.textContent).toContain('A short description for testing the card layout.');
     expect(compiled.textContent).toContain('2h');
+  });
+
+  it('emits chatTriggered when triggerChat is called', () => {
+    let emitted = false;
+    component.chatTriggered.subscribe((article) => {
+      emitted = true;
+      expect(article.id).toBe('1');
+    });
+
+    const event = new MouseEvent('click');
+    component.triggerChat(event);
+    expect(emitted).toBe(true);
   });
 });

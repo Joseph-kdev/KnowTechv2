@@ -2,6 +2,7 @@ import { Component, inject, computed } from '@angular/core';
 import { BookmarkService } from '../../services/bookmark-service';
 import { ArticleCardComponent, DisplayArticle } from '../posts/article-card/article-card';
 import { formatTimestamp } from '../../utils/utils';
+import { AiChat } from '../../services/ai-chat';
 
 @Component({
   selector: 'app-bookmarks',
@@ -12,6 +13,7 @@ import { formatTimestamp } from '../../utils/utils';
 })
 export class Bookmarks {
   private bookmarkService = inject(BookmarkService);
+  private aiChatService = inject(AiChat);
 
   readonly displayBookmarks = computed<DisplayArticle[]>(() =>
     this.bookmarkService.bookmarks().map((bookmark) => ({
@@ -42,5 +44,9 @@ export class Bookmarks {
     if (article) {
       this.bookmarkService.toggleBookmark(article);
     }
+  }
+
+  onChatTriggered(article: DisplayArticle): void {
+    this.aiChatService.openChat(article);
   }
 }

@@ -18,6 +18,8 @@
     "@angular/forms": "^22.0.0",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
+    "@dicebear/core": "^9.4.2",
+    "@dicebear/initials": "^9.4.2",
     "@ngneat/overview": "^6.0.0",
     "@ngxpert/hot-toast": "^6.4.1",
     "firebase": "^12.15.0",

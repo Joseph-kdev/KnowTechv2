@@ -23,6 +23,7 @@ export class ArticleCardComponent {
   @Input() isBookmarked = false;
   @Output() articleSelected = new EventEmitter<string>();
   @Output() bookmarkToggled = new EventEmitter<string>();
+  @Output() chatTriggered = new EventEmitter<DisplayArticle>();
 
   selectArticle(): void {
     if (this.article?.url) {
@@ -33,6 +34,11 @@ export class ArticleCardComponent {
   toggleBookmark(event: MouseEvent): void {
     event.stopPropagation();
     this.bookmarkToggled.emit(this.article.id);
+  }
+
+  triggerChat(event: MouseEvent): void {
+    event.stopPropagation();
+    this.chatTriggered.emit(this.article);
   }
 
   getDisplayDescription(): string {

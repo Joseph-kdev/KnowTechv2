@@ -8,6 +8,7 @@ import { ArticleCardComponent, type DisplayArticle } from './article-card/articl
 import { extractFirstImg, formatTimestamp, getPostTimestampValue } from '../../utils/utils';
 import { FeedGroup } from '../../types';
 import { NgxSpinnerComponent, NgxSpinnerService } from 'ngx-spinner';
+import { AiChat } from '../../services/ai-chat';
 
 interface Post {
   id: string;
@@ -38,6 +39,7 @@ export class Posts implements OnInit {
   auth = inject(AuthService);
   postService = inject(PostService);
   bookmarkService = inject(BookmarkService);
+  aiChatService = inject(AiChat);
   spinner = inject(NgxSpinnerService);
   uid = this.auth._user()?.uid;
 
@@ -181,6 +183,10 @@ export class Posts implements OnInit {
     }
 
     this.bookmarkService.toggleBookmark(article);
+  }
+
+  onChatTriggered(article: DisplayArticle): void {
+    this.aiChatService.openChat(article);
   }
 
   isArticleBookmarked(url: string): boolean {

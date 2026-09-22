@@ -11,6 +11,8 @@ import { Feed, FeedGroup } from '../../types';
 import { NgxSpinnerService, NgxSpinnerComponent } from 'ngx-spinner';
 import { HotToastService } from '@ngxpert/hot-toast';
 
+import { AiChat } from '../../services/ai-chat';
+
 @Component({
   selector: 'app-home',
   imports: [CommonModule, ArticleCardComponent, NgxSpinnerComponent],
@@ -25,7 +27,7 @@ export class Home implements OnInit {
   auth = inject(AuthService);
   uid = this.auth._user()?.uid;
   spinner = inject(NgxSpinnerService);
-  private toastService = inject(HotToastService)
+  private toastService = inject(HotToastService);
 
   readonly isLoading = signal(false);
   readonly isError = signal(false);
@@ -36,6 +38,7 @@ export class Home implements OnInit {
 
   feedService = inject(Feeds);
   bookmarkService = inject(BookmarkService);
+  aiChatService = inject(AiChat);
 
   readonly bookmarkedArticles = computed<DisplayArticle[]>(() =>
     this.bookmarkService.bookmarks().map((bookmark) => ({
@@ -177,5 +180,9 @@ export class Home implements OnInit {
     }
 
     this.bookmarkService.toggleBookmark(article);
+  }
+
+  onChatTriggered(article: DisplayArticle): void {
+    this.aiChatService.openChat(article);
   }
 }

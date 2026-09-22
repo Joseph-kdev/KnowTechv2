@@ -11,9 +11,11 @@
         <!-- Avatar overlapping the cover -->
         <div class="flex flex-col sm:flex-row sm:items-end gap-4 -mt-12 mb-6">
           <div class="w-24 h-24 rounded-full bg-white p-1 shadow-md shrink-0">
-            <div class="w-full h-full rounded-full bg-gradient-to-tr from-secondary-500 to-primary-100 border border-gray-200 flex items-center justify-center text-3xl font-extrabold text-bacground-700">
-              {{ getUserInitials() }}
-            </div>
+            <img
+              class="w-full h-full rounded-full border border-gray-200"
+              [src]="avatarUrl()"
+              [alt]="getUserDisplayName() + ' avatar'"
+            />
           </div>
           <div class="mb-1">
             <h2 class="text-xl font-bold text-gray-900">{{ getUserDisplayName() }}</h2>

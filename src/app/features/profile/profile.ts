@@ -1,6 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { createAvatar } from '@dicebear/core';
+import * as initials from '@dicebear/initials';
 import { AuthService } from '../../services/authService';
 import { BookmarkService } from '../../services/bookmark-service';
 import { Feeds } from '../../services/feeds';
@@ -23,6 +25,13 @@ export class Profile implements OnInit {
 
   followedFeedsCount = signal<number>(0);
   currentTheme = signal<string>('theme-slate');
+  avatarUrl = computed(() =>
+    createAvatar(initials, {
+      seed: this.getAvatarSeed(),
+      radius: 50,
+      backgroundColor: ['2563eb'],
+    }).toDataUri(),
+  );
 
   ngOnInit(): void {
     if (this.uid) {
@@ -65,14 +74,9 @@ export class Profile implements OnInit {
     return 'User';
   }
 
-  getUserInitials(): string {
-    const name = this.getUserDisplayName();
-    if (!name) return 'KT';
-    const parts = name.split(' ');
-    if (parts.length >= 2) {
-      return (parts[0][0] + parts[1][0]).toUpperCase();
-    }
-    return name.slice(0, 2).toUpperCase();
+  getAvatarSeed(): string {
+    const displayName = this.user()?.displayName?.trim();
+    return displayName?.split(/\s+/)[0] || 'User';
   }
 
   onLogout(): void {

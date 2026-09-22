@@ -1,0 +1,223 @@
+@if (aiChatService.isOpen()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-900/60 backdrop-blur-sm transition-opacity duration-200"
+    (click)="closeModal()"
+  >
+    <div
+      class="bg-background-100 border border-background-300 rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col h-150 max-h-[90vh] overflow-hidden relative"
+      (click)="$event.stopPropagation()"
+    >
+      <!-- Header -->
+      <div
+        class="px-5 py-4 bg-background-200/90 border-b border-background-300 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3 overflow-hidden pr-2">
+          <div
+            class="w-9 h-9 rounded-xl bg-primary-600/15 text-secondary-600 flex items-center justify-center shrink-0"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 10V3L4 14h7v7l9-11h-7z"
+              />
+            </svg>
+          </div>
+          <div class="overflow-hidden">
+            <div class="flex items-center gap-2">
+              <h3 class="text-sm font-bold text-background-900 truncate">KnowTech AI</h3>
+            </div>
+            @if (aiChatService.activeArticle(); as article) {
+              <p class="text-xs text-background-500 truncate mt-0.5" title="{{ article.headline }}">
+                Discussing:
+                <span class="font-medium text-background-700">{{ article.headline }}</span>
+              </p>
+            }
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button
+            type="button"
+            (click)="clearChat()"
+            class="p-2 rounded-xl text-background-500 hover:text-background-800 hover:bg-background-300/60 transition-colors"
+            title="Clear Chat History"
+            aria-label="Clear chat history"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          </button>
+
+          <button
+            type="button"
+            (click)="closeModal()"
+            class="p-2 rounded-xl text-background-500 hover:text-background-800 hover:bg-background-300/60 transition-colors"
+            title="Close Chat"
+            aria-label="Close modal"
+          >
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Body -->
+      <div #scrollContainer class="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4 bg-background-50/50">
+        @if (
+          aiChatService.history().length === 0 && !aiChatService.streaming() && !currentChunk()
+        ) {
+          <div class="py-8 text-center flex flex-col items-center justify-center">
+            <div
+              class="w-12 h-12 rounded-2xl bg-primary-500/10 text-secondary-600 flex items-center justify-center mb-3"
+            >
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                  d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z"
+                />
+              </svg>
+            </div>
+            <h4 class="text-sm font-bold text-background-900 mb-10">Start the Conversation</h4>
+
+            @if (aiChatService.activeArticle(); as article) {
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-left w-full max-w-md">
+                <button
+                  type="button"
+                  (click)="setPrompt('Summarize the key points of this article: ' + article.url)"
+                  class="p-2.5 text-xs rounded-xl bg-background-100 hover:bg-background-200 border border-background-300/80 text-background-800 transition-colors text-center font-medium"
+                >
+                  Summarize key points
+                </button>
+                <button
+                  type="button"
+                  (click)="setPrompt('Why is this article significant? ' + article.url)"
+                  class="p-2.5 text-xs rounded-xl bg-background-100 hover:bg-background-200 border border-background-300/80 text-background-800 transition-colors text-center font-medium"
+                >
+                  Explain significance
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Conversation History -->
+        @for (msg of aiChatService.history(); track $index) {
+          <div
+            class="flex flex-col"
+            [class.items-end]="msg.role === 'user'"
+            [class.items-start]="msg.role === 'model'"
+          >
+            <span class="text-[10px] font-semibold text-background-400 mb-1 px-1">
+              {{ msg.role === 'user' ? 'You' : 'AI Assistant' }}
+            </span>
+            <div
+              class="max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap shadow-xs"
+              [class.bg-primary-600]="msg.role === 'user'"
+              [class.text-on-primary]="msg.role === 'user'"
+              [class.rounded-tr-xs]="msg.role === 'user'"
+              [class.bg-background-200]="msg.role === 'model'"
+              [class.text-background-900]="msg.role === 'model'"
+              [class.border]="msg.role === 'model'"
+              [class.border-background-300]="msg.role === 'model'"
+              [class.rounded-tl-xs]="msg.role === 'model'"
+            >
+              {{ msg.parts }}
+            </div>
+          </div>
+        }
+
+        <!-- Current Streaming Chunk (if streaming model output) -->
+        @if (aiChatService.streaming()) {
+          <div class="flex flex-col items-start">
+            <span
+              class="text-[10px] font-semibold text-background-400 mb-1 px-1 flex items-center gap-1.5"
+            >
+              AI Assistant
+              <span class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-ping"></span>
+            </span>
+
+            <div
+              class="max-w-[85%] rounded-2xl rounded-tl-xs px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap shadow-xs bg-background-200 text-background-900 border border-background-300"
+            >
+              @if (currentChunk()) {
+                {{ currentChunk() }}
+                <span
+                  class="inline-block w-1.5 h-4 bg-secondary-400 ml-0.5 animate-pulse align-middle"
+                ></span>
+              } @else {
+                <div class="flex items-center gap-1 py-1 px-2 text-background-500 text-xs">
+                  <span class="w-2 h-2 rounded-full bg-primary-500 animate-bounce"></span>
+                  <span
+                    class="w-2 h-2 rounded-full bg-primary-500 animate-bounce [animation-delay:0.2s]"
+                  ></span>
+                  <span
+                    class="w-2 h-2 rounded-full bg-primary-500 animate-bounce [animation-delay:0.4s]"
+                  ></span>
+                  <span class="ml-2 font-medium">Thinking...</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Footer / Input Bar -->
+      <div class="p-3 sm:p-4 bg-background-200/90 border-t border-background-300">
+        <form (ngSubmit)="send()" class="flex items-end gap-2">
+          <div class="relative flex-1 flex items-center gap-2">
+            <textarea
+              rows="2"
+              [ngModel]="messageInput()"
+              (ngModelChange)="messageInput.set($event)"
+              name="promptInput"
+              placeholder="Ask a question about this article..."
+              (keydown.enter)="$event.preventDefault(); send()"
+              class="w-full px-3.5 py-2.5 bg-background-100 border border-background-300 rounded-xl text-sm text-background-900 placeholder-background-400 focus:outline-none focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500 transition-all resize-none"
+            ></textarea>
+
+            @if (aiChatService.streaming()) {
+              <button
+                type="button"
+                (click)="cancelStream()"
+                class="px-4 py-2.5 bg-gray-600 hover:bg-gray-700 text-white font-semibold text-xs rounded-xl transition-colors shadow-xs flex items-center gap-1.5 h-10 shrink-0"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+                Stop
+              </button>
+            } @else {
+              <button
+                type="submit"
+                [disabled]="!messageInput().trim()"
+                class="px-4 py-2.5 bg-accent-600 hover:bg-accent-700 text-on-primary font-semibold text-xs rounded-xl transition-colors shadow-xs disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5 h-10 shrink-0 cursor-pointer"
+              >
+                <span>Send</span>
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

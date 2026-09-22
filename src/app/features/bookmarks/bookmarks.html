@@ -13,6 +13,7 @@
             [isBookmarked]="isArticleBookmarked(article.url)"
             (articleSelected)="openArticle($event)"
             (bookmarkToggled)="onBookmarkToggle($event)"
+            (chatTriggered)="onChatTriggered($event)"
           ></app-article-card>
         }
       </div>
